@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+
+<VBox alignment="CENTER" spacing="20.0" stylesheets="@bootstrap3.css" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/17.0.2-ea"
+      fx:controller="com.solovev.quiz_game.controllers.MainController">
+    <children>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0"/>
+    </children>
+</VBox>
