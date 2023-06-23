@@ -7,4 +7,5 @@ module com.solovev.quiz_game {
     opens com.solovev.quiz_game to javafx.fxml;
     exports com.solovev.quiz_game;
     exports com.solovev.quiz_game.controllers;
+    opens com.solovev.quiz_game.controllers to javafx.fxml;
 }
