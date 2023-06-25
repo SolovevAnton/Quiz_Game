@@ -1,7 +1,6 @@
 package com.solovev.quiz_game.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -10,35 +9,44 @@ import java.util.Set;
 /**
  * Class to describe instance of the quiz
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Quiz {
-    private RESPONSE_CODE responseCode;
-    @JsonIgnore
+    @JsonProperty("response_code")
+     private ResponseCode responseCode;
+    @JsonProperty("results")
     private Set<Question> questions = new HashSet<>();
-    public enum RESPONSE_CODE{
+
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    public enum ResponseCode {
         SUCCESS, // Returned results successfully.
         NO_RESULTS,// Could not return results. The API doesn't have enough questions for your query. (Ex. Asking for 50 Questions in a Category that only has 20.)
-        INVALID_PARAMETER, //Contains an invalid parameter. Arguements passed in aren't valid. (Ex. Amount = Five)
+        INVALID_PARAMETER, //Contains an invalid parameter. Arguments passed in aren't valid. (Ex. Amount = Five)
         TOKEN_NOT_FOUND, // Session Token does not exist.
-        TOKEN_EMPTY// Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.
+        TOKEN_EMPTY;// Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.
     }
-
     /**
      * No args constructor for serialization
      */
     public Quiz() {
     }
 
-    public Quiz(RESPONSE_CODE responseCode, Set<Question> questions) {
+    public Quiz(ResponseCode responseCode, Set<Question> questions) {
         this.responseCode = responseCode;
         this.questions = questions;
     }
 
-    public RESPONSE_CODE getResponseCode() {
+    /**
+     * To get number of questions
+     * @return sumber of questions in this quiz
+     */
+    public int size(){
+        return questions.size();
+    }
+
+    public ResponseCode getResponseCode() {
         return responseCode;
     }
 
-    public void setResponseCode(RESPONSE_CODE responseCode) {
+    public void setResponseCode(ResponseCode responseCode) {
         this.responseCode = responseCode;
     }
 
