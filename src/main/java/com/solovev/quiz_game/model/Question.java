@@ -1,6 +1,6 @@
 package com.solovev.quiz_game.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashSet;
@@ -11,37 +11,70 @@ import java.util.Set;
  * Class represents question object
  */
 public class Question {
-    private final Category category;
-    @JsonProperty("type")
-    private final boolean isMultipleChoice;
-    private final Difficulty difficulty;
-    private final String question;
+    @JsonProperty("category")
+    private Category category;
+    private Type type;
+    private Difficulty difficulty;
+    private String question;
     @JsonProperty("correct_answer")
-    private final String correctAnswer;
+    private String correctAnswer;
     @JsonProperty("incorrect_answers")
     private Set<String> incorrectAnswers = new HashSet<>();
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-    public enum Difficulty{
+    public enum Difficulty {
+        @JsonProperty("easy")
         EASY,
+        @JsonProperty("medium")
         MEDIUM,
+        @JsonProperty("hard")
         HARD
     }
-    public Question(Category category, boolean isMultipleChoice, Difficulty difficulty, String question, String correctAnswer, Set<String> incorrectAnswers) {
+    public enum Type{
+        @JsonAlias("multiple")
+        MULTIPLE,
+        @JsonAlias("boolean")
+        BOOLEAN
+    }
+
+    public Question() {
+    }
+    public Question(Category category, Type type, Difficulty difficulty, String question, String correctAnswer, Set<String> incorrectAnswers) {
         this.category = category;
-        this.isMultipleChoice = isMultipleChoice;
+        this.type = type;
         this.difficulty = difficulty;
         this.question = question;
         this.correctAnswer = correctAnswer;
         this.incorrectAnswers = incorrectAnswers;
     }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
     public Category getCategory() {
         return category;
     }
 
-    public boolean isMultipleChoice() {
-        return isMultipleChoice;
+    public Type isMultipleChoice() {
+        return type;
     }
 
     public Difficulty getDifficulty() {
@@ -71,8 +104,9 @@ public class Question {
 
         Question question1 = (Question) o;
 
-        if (isMultipleChoice != question1.isMultipleChoice) return false;
         if (!Objects.equals(category, question1.category)) return false;
+        if (!Objects.equals(type, question1.type))
+            return false;
         if (difficulty != question1.difficulty) return false;
         if (!Objects.equals(question, question1.question)) return false;
         if (!Objects.equals(correctAnswer, question1.correctAnswer))
@@ -83,7 +117,7 @@ public class Question {
     @Override
     public int hashCode() {
         int result = category != null ? category.hashCode() : 0;
-        result = 31 * result + (isMultipleChoice ? 1 : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
         result = 31 * result + (question != null ? question.hashCode() : 0);
         result = 31 * result + (correctAnswer != null ? correctAnswer.hashCode() : 0);
@@ -95,7 +129,7 @@ public class Question {
     public String toString() {
         return "Question{" +
                 "category=" + category +
-                ", isMultipleChoice=" + isMultipleChoice +
+                ", isMultipleChoice=" + type +
                 ", difficulty=" + difficulty +
                 ", question='" + question + '\'' +
                 ", correctAnswer='" + correctAnswer + '\'' +

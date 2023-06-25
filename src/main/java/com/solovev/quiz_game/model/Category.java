@@ -1,6 +1,5 @@
 package com.solovev.quiz_game.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
@@ -9,13 +8,28 @@ import java.util.Objects;
  * Represents category of the question
  */
 public class Category {
-    private final int id;
-    private final String name;
+    @JsonProperty("id")
+    private int id = -1; //categories with unknown ID will show id = -1
+    @JsonProperty("name")
+    private String name;
 
-    @JsonCreator
-    public Category(@JsonProperty("id") int id, @JsonProperty("name") String name) {
+    /**
+     * For serialization
+     */
+    public Category() {
+    }
+
+    public Category(String name) {
+        this.name = name;
+    }
+
+    public Category(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -24,6 +38,10 @@ public class Category {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
