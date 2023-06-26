@@ -11,6 +11,7 @@ module com.solovev.quiz_game {
     opens com.solovev.quiz_game.repositories to com.fasterxml.jackson.databind;
     opens com.solovev.quiz_game.util.enums to com.fasterxml.jackson.databind;
 
+
     exports com.solovev.quiz_game.util.enums;
     exports com.solovev.quiz_game;
     exports com.solovev.quiz_game.controllers;
