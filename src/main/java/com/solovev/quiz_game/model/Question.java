@@ -1,7 +1,8 @@
 package com.solovev.quiz_game.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.solovev.quiz_game.util.enums.Difficulty;
+import com.solovev.quiz_game.util.enums.Type;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -20,21 +21,6 @@ public class Question {
     private String correctAnswer;
     @JsonProperty("incorrect_answers")
     private Set<String> incorrectAnswers = new HashSet<>();
-
-    public enum Difficulty {
-        @JsonProperty("easy")
-        EASY,
-        @JsonProperty("medium")
-        MEDIUM,
-        @JsonProperty("hard")
-        HARD
-    }
-    public enum Type{
-        @JsonAlias("multiple")
-        MULTIPLE,
-        @JsonAlias("boolean")
-        BOOLEAN
-    }
 
     public Question() {
     }

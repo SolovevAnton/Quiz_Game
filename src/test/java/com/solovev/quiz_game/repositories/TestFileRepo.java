@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solovev.quiz_game.model.Category;
 import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
+import com.solovev.quiz_game.util.enums.Difficulty;
+import com.solovev.quiz_game.util.enums.Type;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,8 +44,8 @@ public class TestFileRepo {
                 "    }";
         ObjectMapper objectMapper = new ObjectMapper();
         Question toTest = new Question(new Category("Entertainment: Video Games"),
-                Question.Type.MULTIPLE,
-                Question.Difficulty.MEDIUM,
+                Type.MULTIPLE,
+                Difficulty.MEDIUM,
                 "When Halo 3: ODST was unveiled in 2008, it had a different title. What was the game formally called?",
                 "Halo 3: Recon",
                 Set.of("Halo 3: Helljumpers", "Halo 3: Phantom","Halo 3: Guerilla"));
