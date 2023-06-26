@@ -2,7 +2,9 @@ package com.solovev.quiz_game.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents category of the question
@@ -28,6 +30,22 @@ public class Category {
         this.name = name;
     }
 
+    /**
+     * Method tries to define category id for category based on given collection;
+     * Category will have the same id as the category with the same name in the collection;
+     * If there are several categories, any of the Id will be used
+     * @param categories to search category id
+     * @return true if id was found and changed (however it could much previous one), false otherwise
+     */
+    public boolean defineId(Collection<Category> categories){
+        Optional<Category> foundCategory = categories
+                .stream()
+                .filter(cat -> Objects.equals(cat.name,this.name))
+                .findAny();
+
+        foundCategory.ifPresent(cat -> this.id = cat.id );
+        return foundCategory.isPresent();
+    }
     public void setId(int id) {
         this.id = id;
     }
