@@ -3,9 +3,9 @@ package com.solovev.quiz_game.repositories;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solovev.quiz_game.model.Category;
+import com.solovev.quiz_game.util.URLDataGetter;
 import com.solovev.quiz_game.util.URLs;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -48,7 +48,10 @@ public class AvailableCategoriesRepository implements Repository<Collection<Cate
      */
     public AvailableCategoriesRepository() throws IOException {
         URL url = new URL(URLs.AVAILABLE_CATEGORIES.getValue());
-        this.categories = objectMapper.readValue(url, ContainerForCategories.class).getTrivia_categories();
+
+
+        this.categories = objectMapper.readValue(URLDataGetter.getDataFromURL(url),
+                ContainerForCategories.class).getTrivia_categories();
     }
 
     @Override
