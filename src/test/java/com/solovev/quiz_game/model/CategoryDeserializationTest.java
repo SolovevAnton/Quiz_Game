@@ -19,4 +19,10 @@ public class CategoryDeserializationTest {
         Category value = new Category(-1,"no id Category");
         Assert.assertEquals(value,mapper.readValue(categoryString, Category.class));
     }
+    @Test
+    public void categoryIdOnlyDeserializationTest() throws JsonProcessingException {
+        String categoryString = "{\"id\": 10}";
+        Category value = new Category(10,null);
+        Assert.assertEquals(value,mapper.readValue(categoryString, Category.class));
+    }
 }

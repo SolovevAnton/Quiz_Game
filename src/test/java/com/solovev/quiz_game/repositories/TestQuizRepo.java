@@ -17,14 +17,14 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestFileRepo {
+public class TestQuizRepo {
     private final Path fileWithResponse1 =  Path.of("src","test","resources","response1.json");
     private final Path fileFullQuiz =  Path.of("src","test","resources","normalQuizz.json");
 
     @Test
     public void testQuizResponse1() throws IOException {
-        Assertions.assertAll(() -> new FileRepository(fileWithResponse1.toFile()));
-        Quiz empty = new FileRepository(fileWithResponse1.toFile()).takeData();
+        Assertions.assertAll(() -> new quizRepository(fileWithResponse1.toFile()));
+        Quiz empty = new quizRepository(fileWithResponse1.toFile()).takeData();
         assertEquals(new Quiz(Quiz.ResponseCode.NO_RESULTS,new HashSet<>()),empty);
     }
 
@@ -54,6 +54,6 @@ public class TestFileRepo {
     }
     @Test
     public void testQuizDeserialization() throws IOException {
-       Assertions.assertAll(() ->new FileRepository(fileFullQuiz.toFile()));
+       Assertions.assertAll(() ->new quizRepository(fileFullQuiz.toFile()));
     }
 }

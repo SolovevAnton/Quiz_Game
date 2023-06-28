@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * repository to get single quiz from file
  */
-public class FileRepository implements Repository<Quiz> {
+public class quizRepository implements Repository<Quiz> {
     private Quiz quiz;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -18,7 +18,7 @@ public class FileRepository implements Repository<Quiz> {
      *
      * @param file to take the quiz from
      */
-    public FileRepository(File file) throws IOException {
+    public quizRepository(File file) throws IOException {
         this.quiz = objectMapper.readValue(file, Quiz.class);
     }
 
