@@ -1,8 +1,8 @@
 package com.solovev.quiz_game.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.solovev.quiz_game.util.enums.Difficulty;
-import com.solovev.quiz_game.util.enums.Type;
+import com.solovev.quiz_game.model.enums.Difficulty;
+import com.solovev.quiz_game.model.enums.Type;
 
 import java.util.HashSet;
 import java.util.Objects;

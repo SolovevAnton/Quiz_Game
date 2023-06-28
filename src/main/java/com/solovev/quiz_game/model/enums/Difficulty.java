@@ -1,4 +1,4 @@
-package com.solovev.quiz_game.util.enums;
+package com.solovev.quiz_game.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

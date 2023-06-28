@@ -27,10 +27,6 @@ public class FileRepository implements Repository<Quiz> {
         return quiz;
     }
 
-    @Override
-    public void save(File pathToFile) {
-        //todo implement method
-    }
 
     @Override
     public String toString() {

@@ -2,9 +2,8 @@ package com.solovev.quiz_game.controllers;
 
 import com.solovev.quiz_game.model.Category;
 import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
-import com.solovev.quiz_game.repositories.Repository;
-import com.solovev.quiz_game.util.enums.Difficulty;
-import com.solovev.quiz_game.util.enums.Type;
+import com.solovev.quiz_game.model.enums.Difficulty;
+import com.solovev.quiz_game.model.enums.Type;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -14,6 +13,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Comparator;
 
 public class LoadingForm {
     public ComboBox<Type> comboBoxType;
@@ -25,15 +25,16 @@ public class LoadingForm {
         comboBoxType.getItems().setAll(Type.values());
         comboBoxDifficulty.getItems().setAll(Difficulty.values());
         this.availableCategories = new AvailableCategoriesRepository().takeData();
-
         comboBoxCategory.getItems().setAll(availableCategories);
+        //sort sorted in alphabetical order
+        comboBoxCategory.getItems().sort(Comparator.comparing(Category::getName));
 
         //factory to show only names of categories
         Callback<ListView<Category>, ListCell<Category>> nameFactory = lv -> new ListCell<>() {
             @Override
             protected void updateItem(Category category, boolean empty) {
                 super.updateItem(category, empty);
-                setText(empty ? "" : category.getName());
+                setText(empty ? comboBoxCategory.getPromptText() : category.getName());
             }
         };
         comboBoxCategory.setCellFactory(nameFactory);

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solovev.quiz_game.model.Category;
 import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
-import com.solovev.quiz_game.util.enums.Difficulty;
-import com.solovev.quiz_game.util.enums.Type;
+import com.solovev.quiz_game.model.enums.Difficulty;
+import com.solovev.quiz_game.model.enums.Type;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -57,11 +57,6 @@ public class AvailableCategoriesRepository implements Repository<Collection<Cate
     }
 
     @Override
-    public void save(File pathToFile) {
-        //todo add
-    }
-
-    @Override
     public String toString() {
         return "AvailableCategoriesRepository{" +
                 "categories=" + categories +
