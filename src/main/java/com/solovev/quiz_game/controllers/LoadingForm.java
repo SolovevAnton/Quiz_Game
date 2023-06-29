@@ -3,7 +3,7 @@ package com.solovev.quiz_game.controllers;
 import com.solovev.quiz_game.model.Category;
 import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.model.enums.Difficulty;
-import com.solovev.quiz_game.model.enums.Type;
+import com.solovev.quiz_game.model.enums.QuestionType;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -16,13 +16,13 @@ import java.util.Collection;
 import java.util.Comparator;
 
 public class LoadingForm {
-    public ComboBox<Type> comboBoxType;
+    public ComboBox<QuestionType> comboBoxType;
     public ComboBox<Difficulty> comboBoxDifficulty;
     public ComboBox<Category> comboBoxCategory;
     public TextField textFieldNumberOfQuestions;
     private Collection<Category> availableCategories;
     public void initialize() throws IOException {
-        comboBoxType.getItems().setAll(Type.values());
+        comboBoxType.getItems().setAll(QuestionType.values());
         comboBoxDifficulty.getItems().setAll(Difficulty.values());
         this.availableCategories = new AvailableCategoriesRepository().takeData();
         comboBoxCategory.getItems().setAll(availableCategories);

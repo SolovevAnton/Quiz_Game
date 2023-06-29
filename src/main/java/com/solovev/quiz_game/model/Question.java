@@ -2,7 +2,7 @@ package com.solovev.quiz_game.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.solovev.quiz_game.model.enums.Difficulty;
-import com.solovev.quiz_game.model.enums.Type;
+import com.solovev.quiz_game.model.enums.QuestionType;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -14,7 +14,7 @@ import java.util.Set;
 public class Question {
     @JsonProperty("category")
     private Category category;
-    private Type type;
+    private QuestionType questionType;
     private Difficulty difficulty;
     private String question;
     @JsonProperty("correct_answer")
@@ -24,9 +24,9 @@ public class Question {
 
     public Question() {
     }
-    public Question(Category category, Type type, Difficulty difficulty, String question, String correctAnswer, Set<String> incorrectAnswers) {
+    public Question(Category category, QuestionType questionType, Difficulty difficulty, String question, String correctAnswer, Set<String> incorrectAnswers) {
         this.category = category;
-        this.type = type;
+        this.questionType = questionType;
         this.difficulty = difficulty;
         this.question = question;
         this.correctAnswer = correctAnswer;
@@ -36,12 +36,12 @@ public class Question {
         this.category = category;
     }
 
-    public Type getType() {
-        return type;
+    public QuestionType getType() {
+        return questionType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setType(QuestionType questionType) {
+        this.questionType = questionType;
     }
 
     public void setDifficulty(Difficulty difficulty) {
@@ -59,8 +59,8 @@ public class Question {
         return category;
     }
 
-    public Type isMultipleChoice() {
-        return type;
+    public QuestionType isMultipleChoice() {
+        return questionType;
     }
 
     public Difficulty getDifficulty() {
@@ -91,7 +91,7 @@ public class Question {
         Question question1 = (Question) o;
 
         if (!Objects.equals(category, question1.category)) return false;
-        if (!Objects.equals(type, question1.type))
+        if (!Objects.equals(questionType, question1.questionType))
             return false;
         if (difficulty != question1.difficulty) return false;
         if (!Objects.equals(question, question1.question)) return false;
@@ -103,7 +103,7 @@ public class Question {
     @Override
     public int hashCode() {
         int result = category != null ? category.hashCode() : 0;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (questionType != null ? questionType.hashCode() : 0);
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
         result = 31 * result + (question != null ? question.hashCode() : 0);
         result = 31 * result + (correctAnswer != null ? correctAnswer.hashCode() : 0);
@@ -115,7 +115,7 @@ public class Question {
     public String toString() {
         return "Question{" +
                 "category=" + category +
-                ", isMultipleChoice=" + type +
+                ", isMultipleChoice=" + questionType +
                 ", difficulty=" + difficulty +
                 ", question='" + question + '\'' +
                 ", correctAnswer='" + correctAnswer + '\'' +

@@ -6,7 +6,7 @@ import com.solovev.quiz_game.model.Category;
 import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.model.enums.Difficulty;
-import com.solovev.quiz_game.model.enums.Type;
+import com.solovev.quiz_game.model.enums.QuestionType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ public class TestQuizRepo {
                 "    }";
         ObjectMapper objectMapper = new ObjectMapper();
         Question toTest = new Question(new Category("Entertainment: Video Games"),
-                Type.MULTIPLE,
+                QuestionType.MULTIPLE,
                 Difficulty.MEDIUM,
                 "When Halo 3: ODST was unveiled in 2008, it had a different title. What was the game formally called?",
                 "Halo 3: Recon",
