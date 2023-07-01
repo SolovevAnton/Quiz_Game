@@ -30,15 +30,28 @@ public class LoadingForm {
         comboBoxCategory.getItems().sort(Comparator.comparing(Category::getName));
 
         //factory to show only names of categories
-        Callback<ListView<Category>, ListCell<Category>> nameFactory = lv -> new ListCell<>() {
+        Callback<ListView<Category>, ListCell<Category>> nameFactoryCategory = lv -> new ListCell<>() {
             @Override
             protected void updateItem(Category category, boolean empty) {
                 super.updateItem(category, empty);
                 setText(empty ? comboBoxCategory.getPromptText() : category.getName());
             }
         };
-        comboBoxCategory.setCellFactory(nameFactory);
-        comboBoxCategory.setButtonCell(nameFactory.call(null));
+
+        //factory to show promt text if value is empty for buttonCell
+        Callback<ListView, ListCell> nameFactory = lv -> new ListCell<>(){
+            @Override
+            protected void updateItem(Object object, boolean empty) {
+                super.updateItem(object, empty);
+                setText(empty ? comboBoxCategory.getPromptText() : object.toString());
+            }
+        };
+
+        comboBoxCategory.setCellFactory(nameFactoryCategory);
+
+        comboBoxCategory.setButtonCell(nameFactoryCategory.call(null));
+        comboBoxType.setButtonCell(nameFactory.call(null));
+        comboBoxDifficulty.setButtonCell(nameFactory.call(null));
 
         reset();
     }
