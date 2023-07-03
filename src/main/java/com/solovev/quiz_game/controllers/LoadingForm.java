@@ -1,10 +1,9 @@
 package com.solovev.quiz_game.controllers;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 import com.solovev.quiz_game.model.Category;
-import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
+import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
