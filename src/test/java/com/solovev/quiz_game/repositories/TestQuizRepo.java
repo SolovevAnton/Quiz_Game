@@ -7,7 +7,6 @@ import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
-import com.solovev.quiz_game.util.URLs;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -45,8 +44,8 @@ public class TestQuizRepo {
         assertAll(() -> new QuizRepository(urlDefault));
         Quiz defaultQuiz = new QuizRepository(urlDefault).takeData();
 
-        assertEquals(Quiz.ResponseCode.SUCCESS,defaultQuiz.getResponseCode());
-        assertEquals(numberOfQuestions,defaultQuiz.size());
+        assertEquals(Quiz.ResponseCode.SUCCESS, defaultQuiz.getResponseCode());
+        assertEquals(numberOfQuestions, defaultQuiz.size());
     }
 
     @Test
