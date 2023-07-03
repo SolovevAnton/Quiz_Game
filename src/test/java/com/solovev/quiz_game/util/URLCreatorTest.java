@@ -16,20 +16,22 @@ class URLCreatorTest {
 
     @Test
     void getURL() throws MalformedURLException {
+        String numberOfQuestions = "10";
         Category category = new Category(9);
         Difficulty difficulty = Difficulty.EASY;
         QuestionType type = QuestionType.MULTIPLE;
 
+
         assertEquals(new URL("https://opentdb.com/api.php?amount=10"),
-                new URLCreator(new Request(10)).getURL());
+                new URLCreator(new Request(numberOfQuestions)).getURL());
         assertEquals(new URL("https://opentdb.com/api.php?amount=50"),
-                new URLCreator(new Request(50)).getURL());
+                new URLCreator(new Request("50")).getURL());
 
         assertEquals(new URL("https://opentdb.com/api.php?amount=10&category=9"),
-                new URLCreator(new Request(10,category)).getURL());
+                new URLCreator(new Request(numberOfQuestions,category)).getURL());
         assertEquals(new URL("https://opentdb.com/api.php?amount=10&category=9&difficulty=easy"),
-                new URLCreator(new Request(10,category,difficulty)).getURL());
+                new URLCreator(new Request(numberOfQuestions,category,difficulty)).getURL());
         assertEquals(new URL("https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple"),
-                new URLCreator(new Request(10,category,difficulty,type)).getURL());
+                new URLCreator(new Request(numberOfQuestions,category,difficulty,type)).getURL());
     }
 }

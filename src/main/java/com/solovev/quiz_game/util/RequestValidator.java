@@ -14,6 +14,7 @@ import java.util.Map;
 public class RequestValidator {
 
     //all possible error massages
+    public static final String WRONG_FORMAT_MESSAGE = "Number of questions must be an integer";
     public static final String OVERALL_NUMBER = "Question number can be from 1 to %d";
     public static final String DIFFICULTY_MESSAGE = """
             Exceeding number of available questions.
@@ -23,7 +24,7 @@ public class RequestValidator {
     private String errorMessage;
     private final int overallMaxNumberOfQuestions;
     private final Request request;
-    private final int numberOfQuestions;
+    private int numberOfQuestions;
     private Map<Difficulty, Integer> countQuestionsByDifficulty;
     private int allAvailableQuestions;
 
@@ -31,7 +32,6 @@ public class RequestValidator {
     public RequestValidator(int overallMaxNumberOfQuestions, Request request) {
         this.overallMaxNumberOfQuestions = overallMaxNumberOfQuestions;
         this.request = request;
-        this.numberOfQuestions = request.getNumberOfQuestions();
     }
 
     /**
@@ -40,11 +40,36 @@ public class RequestValidator {
      * @return true if valid false otherwise
      */
     public boolean isValid() throws IOException {
-        if (numberOfQuestions < 1 || numberOfQuestions > overallMaxNumberOfQuestions) {
-            errorMessage = String.format(OVERALL_NUMBER, overallMaxNumberOfQuestions);
+        //order of method execution is important
+        return checkNumberOfQuestionsIsAnInt()
+                && checkNumberOfQuestions()
+                && checkCategory();
+    }
+
+    /**
+     * Checks if number of questions can be parsed as integer
+     *
+     * @return true if it is and false otherwise
+     */
+    private boolean checkNumberOfQuestionsIsAnInt() {
+        try {
+            numberOfQuestions = Integer.parseInt(request.getNumberOfQuestions());
+            return true;
+        } catch (NumberFormatException e) {
+            errorMessage = WRONG_FORMAT_MESSAGE;
             return false;
         }
-        return checkCategory();
+    }
+
+    /**
+     * Checks if number odf questions does not exceed overall number of questions;
+     * rewrites error message regardless of result
+     *
+     * @return true if number of questions does not exceed max allowed false otherwise
+     */
+    private boolean checkNumberOfQuestions() {
+         errorMessage = String.format(OVERALL_NUMBER, overallMaxNumberOfQuestions);
+        return numberOfQuestions > 0 && numberOfQuestions <= overallMaxNumberOfQuestions;
     }
 
     /**
@@ -56,12 +81,10 @@ public class RequestValidator {
         if (request.getCategory() == null) {
             return true;
         }
-
         loadMap();
         //creates message to show in case of request is not valid
         createMessage();
-
-        return numberOfQuestions <= allAvailableQuestions && checkDifficulty();
+        return numberOfQuestions <= allAvailableQuestions && checkDifficulty(); // difficulty check is invoked here, since it only should be invoked if category is not null
     }
 
     /**

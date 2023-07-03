@@ -25,11 +25,17 @@ class RequestValidatorTest {
 
     @Test
     public void isValidKnownData() throws IOException {
+        assertTrue(check(normalRequest));
         assertTrue(check(defaultRequest));
         assertTrue(check(maxQuestions));
         assertTrue(check(validOnlyCategory));
+        assertTrue(check(validOnlyDifficulty));
         assertTrue(check(validFullMedium));
 
+        assertFalse(check(invalidNumberRequest));
+        assertFalse(check(decimalRequest));
+        assertFalse(check(longRequest));
+        assertFalse(check(floatRequest));
         assertFalse(check(inValidMinQuestion));
         assertFalse(check(inValidMaxQuestion));
         assertFalse(check(inValidCategory));
@@ -38,6 +44,10 @@ class RequestValidatorTest {
 
     @Test
     public void messageTest() throws IOException {
+
+        assertEquals(RequestValidator.WRONG_FORMAT_MESSAGE, errorMessage(invalidNumberRequest));
+        assertEquals(RequestValidator.WRONG_FORMAT_MESSAGE, errorMessage(decimalRequest));
+        assertEquals(RequestValidator.WRONG_FORMAT_MESSAGE, errorMessage(floatRequest));
 
         assertTrue(errorMessage(inValidMaxQuestion)
                 .matches(RequestValidator.OVERALL_NUMBER.replaceAll("%.", "\\\\w*") + "(?s).*"));
@@ -56,20 +66,20 @@ class RequestValidatorTest {
                         + "\nMessage: " + errorMessage(inValidDifficulty));
     }
 
-    @RepeatedTest(500)
+    @RepeatedTest(1000)
     public void randomTests() throws IOException {
         Request randomReq = randomRequest();
         URL createdUrl = new URLCreator(randomReq).getURL();
 
         Quiz quizFromRequest = new QuizRepository(createdUrl).takeData();
         boolean isValidRequest = quizFromRequest.getResponseCode() == Quiz.ResponseCode.SUCCESS
-                && quizFromRequest.size() == randomReq.getNumberOfQuestions(); // url will response with amount  > 50, but will return only 50 questions
+                && quizFromRequest.size() == Integer.parseInt(randomReq.getNumberOfQuestions()); // url will response with amount  > 50, but will return only 50 questions
 
         assertEquals(isValidRequest, new RequestValidator(maxNumberOfQuestions, randomReq).isValid(),
                 "Request: " + randomReq + " URL: " + createdUrl);
     }
 
-    private int defaultNumberOfQuestions = new LoadingForm().getDefaultQuestionsNumber();
+    private String defaultNumberOfQuestions = new LoadingForm().getDefaultQuestionsNumber();
     private int maxNumberOfQuestions = new LoadingForm().getMaxQuestionsNumber();
     private List<Category> availableCategories;
 
@@ -82,14 +92,20 @@ class RequestValidatorTest {
     }
 
     //test cases
+    private Request invalidNumberRequest = new Request("abd");
+    private Request decimalRequest = new Request("17.0");
+    private Request longRequest = new Request("17L");
+    private Request floatRequest = new Request("17.0f");
+    private Request normalRequest = new Request("10");
     private Request defaultRequest = new Request(defaultNumberOfQuestions);
-    private Request maxQuestions = new Request(maxNumberOfQuestions);
+    private Request maxQuestions = new Request(String.valueOf(maxNumberOfQuestions));
     private Request validOnlyCategory = new Request(defaultNumberOfQuestions, new Category(9));
+    private Request validOnlyDifficulty = new Request(defaultNumberOfQuestions, null, Difficulty.EASY);
     private Request validFullMedium = new Request(defaultNumberOfQuestions, new Category(9), Difficulty.MEDIUM);
-    private Request inValidMinQuestion = new Request(0);
-    private Request inValidMaxQuestion = new Request(maxNumberOfQuestions + 1);
-    private Request inValidCategory = new Request(35, new Category(13));
-    private Request inValidDifficulty = new Request(9, new Category(13), Difficulty.EASY);
+    private Request inValidMinQuestion = new Request("0");
+    private Request inValidMaxQuestion = new Request(String.valueOf(maxNumberOfQuestions + 1));
+    private Request inValidCategory = new Request("35", new Category(13));
+    private Request inValidDifficulty = new Request("9", new Category(13), Difficulty.EASY);
 
     /**
      * Generates random request from available categories
@@ -98,8 +114,8 @@ class RequestValidatorTest {
      */
     private Request randomRequest() {
         Random rand = new Random();
-        int numberOfQuestions = rand.nextInt(-2, maxNumberOfQuestions + 1) + 1;
-        Category category = availableCategories.get(rand.nextInt(availableCategories.size()));
+        String numberOfQuestions = String.valueOf(rand.nextInt(-2, maxNumberOfQuestions + 1) + 1);
+        Category category = rand.nextBoolean() ? availableCategories.get(rand.nextInt(availableCategories.size())) : null;
 
         Difficulty[] difficulties = Difficulty.values();
         int difSeed = rand.nextInt(-1, difficulties.length);

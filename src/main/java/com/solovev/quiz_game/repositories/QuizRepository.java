@@ -2,6 +2,7 @@ package com.solovev.quiz_game.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solovev.quiz_game.model.Quiz;
+import com.solovev.quiz_game.util.URLDataGetter;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,8 @@ public class QuizRepository implements Repository<Quiz> {
      * @throws IOException if exception occurs
      */
     public QuizRepository(URL url) throws IOException {
-        this.quiz = objectMapper.readValue(url,Quiz.class);
+        byte[] quizResponse = URLDataGetter.getDataFromURL(url);
+        this.quiz = objectMapper.readValue(quizResponse,Quiz.class);
     }
 
     @Override

@@ -9,28 +9,28 @@ import java.util.Objects;
  * Class to present request created by user in the loading form to form quiz with API
  */
 public class Request {
-    private final int numberOfQuestions;
+    private final String numberOfQuestions;
     private Category category;
 
     private Difficulty difficulty;
     private QuestionType questionType;
 
-    public Request(int numberOfQuestions) {
+    public Request(String numberOfQuestions) {
         this.numberOfQuestions = numberOfQuestions;
     }
 
-    public Request(int numberOfQuestions, Category category) {
+    public Request(String numberOfQuestions, Category category) {
         this.numberOfQuestions = numberOfQuestions;
         this.category = category;
     }
 
-    public Request(int numberOfQuestions, Category category, Difficulty difficulty) {
+    public Request(String numberOfQuestions, Category category, Difficulty difficulty) {
         this.numberOfQuestions = numberOfQuestions;
         this.category = category;
         this.difficulty = difficulty;
     }
 
-    public Request(int numberOfQuestions, Category category, Difficulty difficulty, QuestionType questionType) {
+    public Request(String numberOfQuestions, Category category, Difficulty difficulty, QuestionType questionType) {
         this.numberOfQuestions = numberOfQuestions;
         this.category = category;
         this.difficulty = difficulty;
@@ -45,7 +45,7 @@ public class Request {
         this.category = category;
     }
 
-    public int getNumberOfQuestions() {
+    public String getNumberOfQuestions() {
         return numberOfQuestions;
     }
 
@@ -72,7 +72,8 @@ public class Request {
 
         Request request = (Request) o;
 
-        if (numberOfQuestions != request.numberOfQuestions) return false;
+        if (!Objects.equals(numberOfQuestions, request.numberOfQuestions))
+            return false;
         if (!Objects.equals(category, request.category)) return false;
         if (difficulty != request.difficulty) return false;
         return questionType == request.questionType;
@@ -80,8 +81,8 @@ public class Request {
 
     @Override
     public int hashCode() {
-        int result = category != null ? category.hashCode() : 0;
-        result = 31 * result + numberOfQuestions;
+        int result = numberOfQuestions != null ? numberOfQuestions.hashCode() : 0;
+        result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
         result = 31 * result + (questionType != null ? questionType.hashCode() : 0);
         return result;

@@ -1,9 +1,14 @@
 package com.solovev.quiz_game.controllers;
 
 import com.solovev.quiz_game.model.Category;
+import com.solovev.quiz_game.model.Quiz;
+import com.solovev.quiz_game.model.Request;
+import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
-import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
+import com.solovev.quiz_game.repositories.QuizRepository;
+import com.solovev.quiz_game.util.RequestValidator;
+import com.solovev.quiz_game.util.URLCreator;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -16,7 +21,7 @@ import java.util.Collection;
 import java.util.Comparator;
 
 public class LoadingForm {
-    private final int defaultQuestionsNumber = 10;
+    private final String defaultQuestionsNumber = "10";
     private final int maxQuestionsNumber = 50;
     public ComboBox<QuestionType> comboBoxType;
     public ComboBox<Difficulty> comboBoxDifficulty;
@@ -68,13 +73,28 @@ public class LoadingForm {
         textFieldNumberOfQuestions.setText(String.valueOf(defaultQuestionsNumber));
     }
     public void buttonGenerateQuiz(ActionEvent actionEvent) {
+        try{
+            Request request = new Request(textFieldNumberOfQuestions.getText(),comboBoxCategory.getValue(),comboBoxDifficulty.getValue(),comboBoxType.getValue());
+            RequestValidator validator = new RequestValidator(maxQuestionsNumber,request);
+
+            if(validator.isValid()) {
+                URLCreator urlCreator = new URLCreator(request);
+                Quiz createdQuiz = new QuizRepository(urlCreator.getURL()).takeData();
+
+            } else{}
+
+        } catch (NumberFormatException e) {
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void buttonClear(ActionEvent actionEvent) {
         reset();
     }
 
-    public int getDefaultQuestionsNumber() {
+    public String getDefaultQuestionsNumber() {
         return defaultQuestionsNumber;
     }
 
