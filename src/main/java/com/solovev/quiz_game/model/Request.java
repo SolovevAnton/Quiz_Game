@@ -9,14 +9,30 @@ import java.util.Objects;
  * Class to present request created by user in the loading form to form quiz with API
  */
 public class Request {
+    private final int numberOfQuestions;
     private Category category;
-    private int numberOfQuestions;
+
     private Difficulty difficulty;
     private QuestionType questionType;
 
-    public Request(Category category, int numberOfQuestions, Difficulty difficulty, QuestionType questionType) {
-        this.category = category;
+    public Request(int numberOfQuestions) {
         this.numberOfQuestions = numberOfQuestions;
+    }
+
+    public Request(int numberOfQuestions, Category category) {
+        this.numberOfQuestions = numberOfQuestions;
+        this.category = category;
+    }
+
+    public Request(int numberOfQuestions, Category category, Difficulty difficulty) {
+        this.numberOfQuestions = numberOfQuestions;
+        this.category = category;
+        this.difficulty = difficulty;
+    }
+
+    public Request(int numberOfQuestions, Category category, Difficulty difficulty, QuestionType questionType) {
+        this.numberOfQuestions = numberOfQuestions;
+        this.category = category;
         this.difficulty = difficulty;
         this.questionType = questionType;
     }
@@ -31,10 +47,6 @@ public class Request {
 
     public int getNumberOfQuestions() {
         return numberOfQuestions;
-    }
-
-    public void setNumberOfQuestions(int numberOfQuestions) {
-        this.numberOfQuestions = numberOfQuestions;
     }
 
     public Difficulty getDifficulty() {

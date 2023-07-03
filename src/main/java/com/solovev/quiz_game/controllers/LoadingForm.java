@@ -1,5 +1,6 @@
 package com.solovev.quiz_game.controllers;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 import com.solovev.quiz_game.model.Category;
 import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.model.enums.Difficulty;
@@ -16,6 +17,8 @@ import java.util.Collection;
 import java.util.Comparator;
 
 public class LoadingForm {
+    private final int defaultQuestionsNumber = 10;
+    private final int maxQuestionsNumber = 50;
     public ComboBox<QuestionType> comboBoxType;
     public ComboBox<Difficulty> comboBoxDifficulty;
     public ComboBox<Category> comboBoxCategory;
@@ -63,12 +66,20 @@ public class LoadingForm {
         comboBoxType.setValue(null);
         comboBoxCategory.setValue(null);
         comboBoxDifficulty.setValue(null);
-        textFieldNumberOfQuestions.setText("10");
+        textFieldNumberOfQuestions.setText(String.valueOf(defaultQuestionsNumber));
     }
     public void buttonGenerateQuiz(ActionEvent actionEvent) {
     }
 
     public void buttonClear(ActionEvent actionEvent) {
         reset();
+    }
+
+    public int getDefaultQuestionsNumber() {
+        return defaultQuestionsNumber;
+    }
+
+    public int getMaxQuestionsNumber() {
+        return maxQuestionsNumber;
     }
 }
