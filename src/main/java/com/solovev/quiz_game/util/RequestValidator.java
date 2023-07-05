@@ -11,15 +11,15 @@ import java.util.Map;
  * Class used to validate the request before forming url to quiz API. Mainly focuses on the questions insufficiencies
  * NOTE: The boolean/multiple question insufficiencies is not checked! Only topic and difficulty ones;
  */
-public class RequestValidator {
+public class RequestValidator implements Validator {
 
     //all possible error massages
     public static final String WRONG_FORMAT_MESSAGE = "Number of questions must be an integer";
     public static final String OVERALL_NUMBER = "Question number can be from 1 to %d";
     public static final String DIFFICULTY_MESSAGE = """
-            Exceeding number of available questions.
-            You request %d questions in category %s and %s difficulty.
-            But there are total of %d questions in category:
+            Could not return results. The Database doesn't have enough questions for your query.
+            You requested %d questions in category %s and %s difficulty.
+            But there are TOTAL of %d questions in category:
             %s""";
     private String errorMessage;
     private final int overallMaxNumberOfQuestions;
@@ -39,7 +39,7 @@ public class RequestValidator {
      *
      * @return true if valid false otherwise
      */
-    public boolean isValid() throws IOException {
+    public boolean isValid() {
         //order of method execution is important
         return checkNumberOfQuestionsIsAnInt()
                 && checkNumberOfQuestions()
@@ -77,7 +77,7 @@ public class RequestValidator {
      *
      * @return true if there are overall sufficient questions in category and difficulty is not specified, or category is null, else checks checkDifficulty
      */
-    private boolean checkCategory() throws IOException {
+    private boolean checkCategory() {
         if (request.getCategory() == null) {
             return true;
         }
@@ -103,16 +103,21 @@ public class RequestValidator {
     /**
      * Loads map of questions with difficulties, and stores sum of all questions in this category
      */
-    private void loadMap() throws IOException {
-        countQuestionsByDifficulty = new AvailableQuestionsRepository(request.getCategory().getId())
-                .takeData()
-                .countQuestionsByDifficulty();
+    private void loadMap() {
+        try {
+            countQuestionsByDifficulty = new AvailableQuestionsRepository(request.getCategory().getId())
+                    .takeData()
+                    .countQuestionsByDifficulty();
 
-        allAvailableQuestions = countQuestionsByDifficulty
-                .values()
-                .stream()
-                .reduce(Integer::sum)
-                .orElse(0);
+            allAvailableQuestions = countQuestionsByDifficulty
+                    .values()
+                    .stream()
+                    .reduce(Integer::sum)
+                    .orElse(0);
+        } catch (IOException e){
+            errorMessage = e.getMessage();
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -122,7 +127,7 @@ public class RequestValidator {
     private void createMessage() {
         StringBuilder sb = new StringBuilder();
         for (Difficulty d : Difficulty.values()) {
-            sb.append(d.name().toLowerCase())
+            sb.append(d.name())
                     .append(" questions: ")
                     .append(countQuestionsByDifficulty.get(d))
                     .append("\n");
@@ -130,7 +135,7 @@ public class RequestValidator {
         errorMessage = String.format(DIFFICULTY_MESSAGE,
                 numberOfQuestions,
                 request.getCategory().getName(),
-                request.getDifficulty() == null ? "any" : request.getDifficulty().name().toLowerCase(),
+                request.getDifficulty() == null ? "any" : request.getDifficulty().name(),
                 allAvailableQuestions,
                 sb
         );

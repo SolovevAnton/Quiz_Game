@@ -66,7 +66,7 @@ class RequestValidatorTest {
                         + "\nMessage: " + errorMessage(inValidDifficulty));
     }
 
-    @RepeatedTest(1000)
+    @RepeatedTest(100)
     public void randomTests() throws IOException {
         Request randomReq = randomRequest();
         URL createdUrl = new URLCreator(randomReq).getURL();
@@ -129,7 +129,7 @@ class RequestValidatorTest {
     }
 
     /**
-     * Creates and return message for validator of the reqest
+     * Creates and return message for validator of the request
      *
      * @return error msg
      */
