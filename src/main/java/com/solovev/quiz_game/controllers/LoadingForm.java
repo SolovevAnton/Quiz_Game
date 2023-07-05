@@ -7,13 +7,9 @@ import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
 import com.solovev.quiz_game.repositories.QuizRepository;
-import com.solovev.quiz_game.util.RequestValidator;
-import com.solovev.quiz_game.util.URLCreator;
+import com.solovev.quiz_game.util.*;
 import javafx.event.ActionEvent;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -28,7 +24,9 @@ public class LoadingForm {
     public ComboBox<Category> comboBoxCategory;
     public TextField textFieldNumberOfQuestions;
     private Collection<Category> availableCategories;
+
     public void initialize() throws IOException {
+
         comboBoxType.getItems().setAll(QuestionType.values());
         comboBoxDifficulty.getItems().setAll(Difficulty.values());
         this.availableCategories = new AvailableCategoriesRepository().takeData();
@@ -45,8 +43,8 @@ public class LoadingForm {
             }
         };
 
-        //factory to show promt text if value is empty for buttonCell
-        Callback<ListView, ListCell> nameFactory = lv -> new ListCell<>(){
+        //factory to show prompt text if value is empty for buttonCell
+        Callback<ListView, ListCell> nameFactory = lv -> new ListCell<>() {
             @Override
             protected void updateItem(Object object, boolean empty) {
                 super.updateItem(object, empty);
@@ -66,26 +64,36 @@ public class LoadingForm {
     /**
      * Method resets form to default values
      */
-    public void reset(){
+    public void reset() {
         comboBoxType.setValue(null);
         comboBoxCategory.setValue(null);
         comboBoxDifficulty.setValue(null);
         textFieldNumberOfQuestions.setText(String.valueOf(defaultQuestionsNumber));
     }
+
     public void buttonGenerateQuiz(ActionEvent actionEvent) {
-        try{
-            Request request = new Request(textFieldNumberOfQuestions.getText(),comboBoxCategory.getValue(),comboBoxDifficulty.getValue(),comboBoxType.getValue());
-            RequestValidator validator = new RequestValidator(maxQuestionsNumber,request);
+        try {
+            Request request = new Request(textFieldNumberOfQuestions.getText(), comboBoxCategory.getValue(), comboBoxDifficulty.getValue(), comboBoxType.getValue());
+            RequestValidator requestValidator = new RequestValidator(maxQuestionsNumber, request);
+            String errorMessage = null;
 
-            if(validator.isValid()) {
+            if (requestValidator.isValid()) {
                 URLCreator urlCreator = new URLCreator(request);
-                Quiz createdQuiz = new QuizRepository(urlCreator.getURL()).takeData();
-
-            } else{}
-
-        } catch (NumberFormatException e) {
-
+                QuizRepository createdQuiz = new QuizRepository(urlCreator.getURL());
+                Validator quizValidator = new QuizValidator(createdQuiz.takeData());
+                if (quizValidator.isValid()) {
+                    //toDo cange to file save
+                } else {
+                    errorMessage = quizValidator.getErrorMessage();
+                }
+            } else {
+                errorMessage = requestValidator.getErrorMessage();
+            }
+            if(errorMessage != null) {
+                WindowManager.showAlertWithoutHeaderText("Quiz not created",errorMessage, Alert.AlertType.WARNING);
+            }
         } catch (IOException e) {
+            WindowManager.showAlertWithoutHeaderText("Exception Occurred!",e.getMessage(), Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         }
     }

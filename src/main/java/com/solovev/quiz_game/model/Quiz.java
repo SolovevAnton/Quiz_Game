@@ -17,11 +17,19 @@ public class Quiz {
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
     public enum ResponseCode {
-        SUCCESS, // Returned results successfully.
-        NO_RESULTS,// Could not return results. The API doesn't have enough questions for your query. (Ex. Asking for 50 Questions in a Category that only has 20.)
-        INVALID_PARAMETER, //Contains an invalid parameter. Arguments passed in aren't valid. (Ex. Amount = Five)
-        TOKEN_NOT_FOUND, // Session Token does not exist.
-        TOKEN_EMPTY;// Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.
+        SUCCESS("Returned results successfully"),
+        NO_RESULTS("Could not return results. The Database doesn't have enough questions for your query. (Ex. Asking for 50 Questions in a Category that only has 20.)"),
+        INVALID_PARAMETER("Contains an invalid parameter. Arguments passed in aren't valid. (Ex. Amount = Five)"),
+        TOKEN_NOT_FOUND("Session Token does not exist."),
+        TOKEN_EMPTY("Session Token has returned all possible questions for the specified query. Resetting the Token is necessary.");
+        private final String message;
+        ResponseCode(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
     /**
      * No args constructor for serialization

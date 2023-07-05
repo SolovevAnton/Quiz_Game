@@ -23,9 +23,8 @@ public class WindowManager {
      * @param name  of the stage .fxml file
      * @param title of the stage
      * @param data  to pass to the stage, or null if nothing
-     * @param <T>
      * @return created stage
-     * @throws IOException
+     * @throws IOException in case IOEException occurs
      */
     public static <T> Stage getStage(String name, String title, T data) throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource(name));
