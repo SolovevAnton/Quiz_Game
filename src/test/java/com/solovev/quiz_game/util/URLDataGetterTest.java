@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class URLDataGetterTest {
+public class URLDataGetterTest {
 
     @Test
     public void checkURLTest() throws IOException {

@@ -10,11 +10,11 @@ module com.solovev.quiz_game {
     opens com.solovev.quiz_game.model to com.fasterxml.jackson.databind;
     opens com.solovev.quiz_game.repositories to com.fasterxml.jackson.databind;
     opens com.solovev.quiz_game.model.enums to com.fasterxml.jackson.databind;
+    opens com.solovev.quiz_game.controllers to javafx.fxml;
 
 
     exports com.solovev.quiz_game.model.enums;
     exports com.solovev.quiz_game;
     exports com.solovev.quiz_game.controllers;
     exports com.solovev.quiz_game.model;
-    opens com.solovev.quiz_game.controllers to javafx.fxml;
 }

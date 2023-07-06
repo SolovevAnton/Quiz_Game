@@ -11,11 +11,11 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class URLCreatorTest {
+public class URLCreatorTest {
 
 
     @Test
-    void getURL() throws MalformedURLException {
+    public void testGetURL() throws MalformedURLException {
         String numberOfQuestions = "10";
         Category category = new Category(9);
         Difficulty difficulty = Difficulty.EASY;

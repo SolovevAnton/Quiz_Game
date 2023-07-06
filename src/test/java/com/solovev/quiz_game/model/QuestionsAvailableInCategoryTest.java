@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class QuestionsAvailableInCategoryTest {
+public class QuestionsAvailableInCategoryTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private String jsonResponse = "{\n" +
             "  \"category_id\": 9,\n" +

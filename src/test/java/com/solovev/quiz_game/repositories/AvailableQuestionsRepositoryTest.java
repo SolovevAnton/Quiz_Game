@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-class AvailableQuestionsRepositoryTest {
+public class AvailableQuestionsRepositoryTest {
     private int categoryIdToTest = 9;
     private int invalidCategoryIdToTest = -1;
 

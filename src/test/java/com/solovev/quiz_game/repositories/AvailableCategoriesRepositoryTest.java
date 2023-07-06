@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.Collection;
 
-class AvailableCategoriesRepositoryTest {
+public class AvailableCategoriesRepositoryTest {
 
     @Test
     public void takeDataTest() throws IOException {

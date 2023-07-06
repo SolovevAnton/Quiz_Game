@@ -9,6 +9,8 @@ import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Note Type is not tested, since cannot be tested with API request
  */
-class RequestValidatorTest {
-
+@Execution(ExecutionMode.CONCURRENT)
+public class RequestValidatorTest {
     @Test
     public void isValidKnownData() throws IOException {
         assertTrue(check(normalRequest));
