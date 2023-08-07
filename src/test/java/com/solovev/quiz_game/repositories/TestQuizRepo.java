@@ -47,18 +47,20 @@ public class TestQuizRepo {
 
     @Test
     public void testQuestionDeserializationQuestion() throws JsonProcessingException {
-        String toDeserialize = "    {\n" +
-                "      \"category\": \"Entertainment: Video Games\",\n" +
-                "      \"type\": \"multiple\",\n" +
-                "      \"difficulty\": \"medium\",\n" +
-                "      \"question\": \"When Halo 3: ODST was unveiled in 2008, it had a different title. What was the game formally called?\",\n" +
-                "      \"correct_answer\": \"Halo 3: Recon\",\n" +
-                "      \"incorrect_answers\": [\n" +
-                "        \"Halo 3: Helljumpers\",\n" +
-                "        \"Halo 3: Phantom\",\n" +
-                "        \"Halo 3: Guerilla\"\n" +
-                "      ]\n" +
-                "    }";
+        String toDeserialize = """
+                    {
+                      "category": "Entertainment: Video Games",
+                      "type": "multiple",
+                      "difficulty": "medium",
+                      "question": "When Halo 3: ODST was unveiled in 2008, it had a different title. What was the game formally called?",
+                      "correct_answer": "Halo 3: Recon",
+                      "incorrect_answers": [
+                        "Halo 3: Helljumpers",
+                        "Halo 3: Phantom",
+                        "Halo 3: Guerilla"
+                      ]
+                    }\
+                """;
         ObjectMapper objectMapper = new ObjectMapper();
         Question toTest = new Question(new Category("Entertainment: Video Games"),
                 QuestionType.MULTIPLE,
@@ -87,7 +89,7 @@ public class TestQuizRepo {
         assertEquals(repoInitial.takeData(),repo.takeData());
     }
     @Test
-    public void testQuizDeserialization() throws IOException {
+    public void testQuizDeserialization() {
         assertAll(() -> new QuizRepository(fileFullQuiz.toFile(),false));
     }
     @Test
@@ -98,26 +100,26 @@ public class TestQuizRepo {
         assertEquals(repoInitial.takeData(),repo.takeData());
     }
     @Test
-    public void readFromHTMLFile() throws IOException {
+    public void readFromHTMLFile() throws IOException { //todo understand why it works like this!
         QuizRepository repoInitial = new QuizRepository(fileHTML.toFile(),false);
         QuizRepository repo = new QuizRepository(fileHTML.toFile(),false);
 
-        List<Question> initial = new ArrayList<>(repoInitial.takeData().getQuestions());
-        List<Question> other = new ArrayList<>(repo.takeData().getQuestions());
-
-        for(Question q : initial){
+/*        Set<Question> initial = new HashSet<>(repoInitial.takeData().getQuestions());
+        Set<Question> other = new HashSet<>(repo.takeData().getQuestions());
+        System.out.println(initial.equals(other));
+*//*        for(Question q : initial){
             System.out.println( "in repo: " + repo.takeData().getQuestions().contains(q) + " Question: " + q);
-        }
+        }*/
         assertEquals(repoInitial.takeData(),repo.takeData());
     }
     @Test
-    public void saveTest() throws IOException {
+    public void saveAndReadTest() throws IOException {
         QuizRepository repoInitial = new QuizRepository(fileFullQuiz.toFile(),false);
         repoInitial.save(fileFullQuizSaved,false);
 
         QuizRepository repo = new QuizRepository(fileFullQuizSaved.toFile(),false);
 
-        assertEquals(repoInitial,repo);
+        assertEquals(repoInitial.takeData(),repo.takeData());
     }
     @Test
     public void testHTMDecoding() throws IOException {

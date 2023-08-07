@@ -1,7 +1,6 @@
 package com.solovev.quiz_game.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.util.URLDataGetter;
 
@@ -9,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.Objects;
 
 /**
  * repository to get single quiz from file
@@ -30,7 +28,7 @@ public class QuizRepository implements Repository<Quiz> {
         if (isEncrypted) {
             encryptOrDecryptQuiz();
         }
-       // quiz.decodeHTML();
+        quiz.decodeHTML();
     }
 
     /**
