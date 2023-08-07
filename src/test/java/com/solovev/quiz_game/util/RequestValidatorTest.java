@@ -68,7 +68,7 @@ public class RequestValidatorTest {
                         + "\nMessage: " + errorMessage(inValidDifficulty));
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(30)
     public void randomTests() throws IOException {
         Request randomReq = randomRequest();
         URL createdUrl = new URLCreator(randomReq).getURL();

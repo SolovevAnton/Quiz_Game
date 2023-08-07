@@ -12,21 +12,18 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestQuizRepo {
-    private final Path fileWithResponse1 = Path.of("src", "test", "resources", "response1.json");
-    private final Path fileFullQuiz = Path.of("src", "test", "resources", "normalQuizz.json");
+
 
     @Test
     public void testQuizResponse1() throws IOException {
-        assertAll(() -> new QuizRepository(fileWithResponse1.toFile()));
-        Quiz emptyFromFile = new QuizRepository(fileWithResponse1.toFile()).takeData();
+        assertAll(() -> new QuizRepository(fileWithResponse1.toFile(),false));
+        Quiz emptyFromFile = new QuizRepository(fileWithResponse1.toFile(),false).takeData();
         assertEquals(new Quiz(Quiz.ResponseCode.NO_RESULTS, new HashSet<>()), emptyFromFile);
 
         // quiz with wrong parameters URL
@@ -74,7 +71,82 @@ public class TestQuizRepo {
     }
 
     @Test
-    public void testQuizDeserialization() throws IOException {
-        assertAll(() -> new QuizRepository(fileFullQuiz.toFile()));
+    public void encryptionTest() throws IOException {
+        QuizRepository repoInitial = new QuizRepository(fileFullQuiz.toFile(),false);
+        QuizRepository repo = new QuizRepository(fileFullQuiz.toFile(),false);
+
+        repo.save(fileFullQuizEncrypted,true);
+
+        assertEquals(repoInitial.takeData(),repo.takeData());
+
+        repo = new QuizRepository(fileFullQuizEncrypted.toFile(),false);
+        assertNotEquals(repoInitial.takeData(),repo.takeData());
+
+
+        repo = new QuizRepository(fileFullQuizEncrypted.toFile(),true);
+        assertEquals(repoInitial.takeData(),repo.takeData());
     }
+    @Test
+    public void testQuizDeserialization() throws IOException {
+        assertAll(() -> new QuizRepository(fileFullQuiz.toFile(),false));
+    }
+    @Test
+    public void readFromFileTest() throws IOException {
+        QuizRepository repoInitial = new QuizRepository(fileFullQuiz.toFile(),false);
+        QuizRepository repo = new QuizRepository(fileFullQuiz.toFile(),false);
+
+        assertEquals(repoInitial.takeData(),repo.takeData());
+    }
+    @Test
+    public void readFromHTMLFile() throws IOException {
+        QuizRepository repoInitial = new QuizRepository(fileHTML.toFile(),false);
+        QuizRepository repo = new QuizRepository(fileHTML.toFile(),false);
+
+        List<Question> initial = new ArrayList<>(repoInitial.takeData().getQuestions());
+        List<Question> other = new ArrayList<>(repo.takeData().getQuestions());
+
+        for(Question q : initial){
+            System.out.println( "in repo: " + repo.takeData().getQuestions().contains(q) + " Question: " + q);
+        }
+        assertEquals(repoInitial.takeData(),repo.takeData());
+    }
+    @Test
+    public void saveTest() throws IOException {
+        QuizRepository repoInitial = new QuizRepository(fileFullQuiz.toFile(),false);
+        repoInitial.save(fileFullQuizSaved,false);
+
+        QuizRepository repo = new QuizRepository(fileFullQuizSaved.toFile(),false);
+
+        assertEquals(repoInitial,repo);
+    }
+    @Test
+    public void testHTMDecoding() throws IOException {
+        QuizRepository repo = new QuizRepository(fileHTML.toFile(),false);
+        Quiz quiz = new Quiz(Quiz.ResponseCode.SUCCESS,
+                Set.of(
+                        new Question(new Category("Entertainment: Television"),
+                               QuestionType.BOOLEAN,
+                               Difficulty.MEDIUM,
+                               "An episode of &quot;The Simpsons&quot; is dedicated to Moe Szyslak&#039;s bar rag.",
+                                "True",
+                                Set.of("False")),
+                        new Question(new Category("Entertainment: Japanese Anime & Manga"),
+                                QuestionType.MULTIPLE,
+                                Difficulty.HARD,
+                                "In the anime Initial D, how does Takumi Fujiwara describe a drift?",
+                                "'. . . the front tires slide so the car won't face the inside'",
+                                Set.of(
+                                        "'. . . the wheels lose traction, making the car slide sideways'",
+                                        "'. . . you turn a lot'",
+                                        "'. . . the car oversteers through a curve, causing it to turn faster'"
+                                )                                )
+                ));
+        assertEquals(quiz,repo.takeData());
+
+    }
+    private final Path fileWithResponse1 = Path.of("src", "test", "resources", "response1.json");
+    private final Path fileFullQuiz = Path.of("src", "test", "resources", "normalQuizz.json");
+    private final Path fileFullQuizEncrypted = Path.of("src", "test", "resources", "encryptedNormalQuiz.json");
+    private final Path fileFullQuizSaved = Path.of("src", "test", "resources", "savedNormalQuiz.json");
+    private final Path fileHTML = Path.of("src","test/resources/htmlQuestions.json");
 }

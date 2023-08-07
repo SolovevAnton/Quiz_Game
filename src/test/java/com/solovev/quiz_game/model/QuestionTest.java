@@ -39,6 +39,16 @@ public class QuestionTest {
         codedQuestion.setIncorrectAnswers(Set.of(
                 "false"
         ));
+
+        Question sameCodedQuestion = new Question();
+        sameCodedQuestion.setQuestion("An episode of &quot;The Simpsons&quot; is dedicated to Moe Szyslak&#039;s bar rag.");
+        sameCodedQuestion.setCorrectAnswer("true");
+        sameCodedQuestion.setIncorrectAnswers(Set.of(
+                "false"
+        ));
+        assertEquals(codedQuestion,sameCodedQuestion);
+
+        sameCodedQuestion.decodeHTML();
         codedQuestion.decodeHTML();
 
         Question decodedQuestion = new Question();
@@ -49,5 +59,68 @@ public class QuestionTest {
         ));
 
         assertEquals(decodedQuestion,codedQuestion);
+        assertEquals(decodedQuestion,sameCodedQuestion);
     }
+
+    @Test
+    public void encryptAndDecryptMultiple() {
+        Question encrypt = new Question(new Category("Entertainment: Video Games"),
+                QuestionType.MULTIPLE,
+                Difficulty.MEDIUM,
+                "When Halo 3: ODST was unveiled in 2008, it had a different title. What was the game formally called?",
+                "Halo 3: Recon",
+                Set.of(
+                        "Halo 3: Helljumpers",
+                        "Halo 3: Phantom",
+                        "Halo 3: Guerilla"
+                )
+        );
+        encrypt.encryptOrDecrypt();
+        assertNotEquals(toEncryptMultiple,encrypt);
+        assertNotEquals(toEncryptMultiple.getCorrectAnswer(),encrypt.getCorrectAnswer());
+        assertNotEquals(toEncryptMultiple.getIncorrectAnswers(),encrypt.getIncorrectAnswers());
+
+        encrypt.encryptOrDecrypt();
+        assertEquals(toEncryptMultiple,encrypt);
+    }
+    @Test
+    public void encryptBoolean() {
+        Question encrypt = new Question(new Category("Entertainment: Music"),
+                QuestionType.BOOLEAN,
+                Difficulty.EASY,
+                "Lead Singer Rivers Cuomo of American rock band Weezer attended Harvard.",
+                "True",
+                Set.of(
+                        "false"
+                )
+        );
+        encrypt.encryptOrDecrypt();
+        assertNotEquals(toEncryptBoolean,encrypt);
+        assertNotEquals(toEncryptBoolean.getCorrectAnswer(),encrypt.getCorrectAnswer());
+        assertNotEquals(toEncryptBoolean.getIncorrectAnswers(),encrypt.getIncorrectAnswers());
+
+        encrypt.encryptOrDecrypt();
+        assertEquals(toEncryptBoolean,encrypt);
+    }
+
+    private final Question toEncryptMultiple = new Question(new Category("Entertainment: Video Games"),
+            QuestionType.MULTIPLE,
+            Difficulty.MEDIUM,
+            "When Halo 3: ODST was unveiled in 2008, it had a different title. What was the game formally called?",
+            "Halo 3: Recon",
+            Set.of(
+                    "Halo 3: Helljumpers",
+                    "Halo 3: Phantom",
+                    "Halo 3: Guerilla"
+            )
+    );
+    private final Question toEncryptBoolean = new Question(new Category("Entertainment: Music"),
+            QuestionType.BOOLEAN,
+            Difficulty.EASY,
+            "Lead Singer Rivers Cuomo of American rock band Weezer attended Harvard.",
+            "True",
+            Set.of(
+                    "false"
+            )
+    );
 }

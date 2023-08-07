@@ -1,5 +1,6 @@
 package com.solovev.quiz_game.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
  * Class represents question object
  */
 public class Question {
+    @JsonIgnore
+    private static final byte[] KEY = "This is the key".getBytes();
     @JsonProperty("category")
     private Category category;
     private QuestionType questionType;
@@ -47,6 +50,36 @@ public class Question {
                         .stream()
                         .map(StringEscapeUtils::unescapeHtml4)
                         .collect(Collectors.toSet());
+    }
+
+    /**
+     * Encrypts this question, so it cannot be directly read from file, if used second time - decrypts it to normal string again
+     * note it is made simple and without any external libraries
+     */
+    public void encryptOrDecrypt(){
+        correctAnswer = encryptOrDecrypt(correctAnswer);
+        incorrectAnswers =
+                incorrectAnswers
+                        .stream()
+                        .map(this::encryptOrDecrypt)
+                        .collect(Collectors.toSet());
+    }
+
+    /**
+     * encrypts string using xor
+     * @param stringToEncrypt to be encrypted
+     * @return encrypted String
+     */
+    private String encryptOrDecrypt(String stringToEncrypt){
+        byte[] toEncrypt = stringToEncrypt.getBytes();
+        byte[] encrypted = new byte[toEncrypt.length];
+        for(int i = 0, keyCounter = 0; i < toEncrypt.length; i++, keyCounter++ ){
+            if(keyCounter >= KEY.length){
+                keyCounter = 0;
+            }
+            encrypted[i] = (byte) (toEncrypt[i]^KEY[keyCounter]);
+        }
+        return new String(encrypted);
     }
 
     public void setCategory(Category category) {
@@ -105,28 +138,19 @@ public class Question {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Question question1 = (Question) o;
+        return Objects.equals(category, question1.category)
+                && questionType == question1.questionType
+                && difficulty == question1.difficulty
+                && Objects.equals(question, question1.question)
+                && Objects.equals(correctAnswer, question1.correctAnswer)
+                && Objects.equals(incorrectAnswers, question1.incorrectAnswers);
 
-        if (!Objects.equals(category, question1.category)) return false;
-        if (!Objects.equals(questionType, question1.questionType))
-            return false;
-        if (difficulty != question1.difficulty) return false;
-        if (!Objects.equals(question, question1.question)) return false;
-        if (!Objects.equals(correctAnswer, question1.correctAnswer))
-            return false;
-        return Objects.equals(incorrectAnswers, question1.incorrectAnswers);
     }
 
     @Override
     public int hashCode() {
-        int result = category != null ? category.hashCode() : 0;
-        result = 31 * result + (questionType != null ? questionType.hashCode() : 0);
-        result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
-        result = 31 * result + (question != null ? question.hashCode() : 0);
-        result = 31 * result + (correctAnswer != null ? correctAnswer.hashCode() : 0);
-        result = 31 * result + (incorrectAnswers != null ? incorrectAnswers.hashCode() : 0);
-        return result;
+        return Objects.hash(category, questionType, difficulty, question, correctAnswer, incorrectAnswers);
     }
 
     @Override

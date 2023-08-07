@@ -2,9 +2,8 @@ package com.solovev.quiz_game.model;
 
 import com.fasterxml.jackson.annotation.*;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class to describe instance of the quiz
@@ -41,6 +40,15 @@ public class Quiz {
         this.responseCode = responseCode;
         setQuestions(questions);
     }
+    public void encryptOrDecrypt(){
+        questions.forEach(Question::encryptOrDecrypt);
+    }
+    /**
+     * Decodes special symbols used in these questions in this Quiz
+     */
+    public void decodeHTML(){
+        questions.forEach(Question::decodeHTML);
+    }
 
     /**
      * To get number of questions
@@ -62,7 +70,7 @@ public class Quiz {
         return questions;
     }
 
-    /**
+     /**
      * Also decodes questions from HTML special symbols, if there are some
      * @param questions to set
      */
