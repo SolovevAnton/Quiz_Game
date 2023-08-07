@@ -3,10 +3,12 @@ package com.solovev.quiz_game.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Class represents question object
@@ -24,6 +26,7 @@ public class Question {
 
     public Question() {
     }
+
     public Question(Category category, QuestionType questionType, Difficulty difficulty, String question, String correctAnswer, Set<String> incorrectAnswers) {
         this.category = category;
         this.questionType = questionType;
@@ -32,6 +35,20 @@ public class Question {
         this.correctAnswer = correctAnswer;
         this.incorrectAnswers = incorrectAnswers;
     }
+
+    /**
+     * Decodes special symbols used in this question
+     */
+    public void decodeHTML() {
+        question = StringEscapeUtils.unescapeHtml4(question);
+        correctAnswer = StringEscapeUtils.unescapeHtml4(correctAnswer);
+        incorrectAnswers =
+                incorrectAnswers
+                        .stream()
+                        .map(StringEscapeUtils::unescapeHtml4)
+                        .collect(Collectors.toSet());
+    }
+
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -55,6 +72,7 @@ public class Question {
     public void setCorrectAnswer(String correctAnswer) {
         this.correctAnswer = correctAnswer;
     }
+
     public Category getCategory() {
         return category;
     }

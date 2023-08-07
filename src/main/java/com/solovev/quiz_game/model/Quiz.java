@@ -39,7 +39,7 @@ public class Quiz {
 
     public Quiz(ResponseCode responseCode, Set<Question> questions) {
         this.responseCode = responseCode;
-        this.questions = questions;
+        setQuestions(questions);
     }
 
     /**
@@ -62,8 +62,13 @@ public class Quiz {
         return questions;
     }
 
+    /**
+     * Also decodes questions from HTML special symbols, if there are some
+     * @param questions to set
+     */
     public void setQuestions(Set<Question> questions) {
         this.questions = questions;
+        questions.forEach(Question::decodeHTML);
     }
 
     @Override
