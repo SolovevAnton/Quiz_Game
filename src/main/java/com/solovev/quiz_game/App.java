@@ -12,7 +12,10 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         String mainForm = "/com/solovev/quiz_game/UI/main.fxml";
         String loaderForm = "/com/solovev/quiz_game/UI/loadingForm.fxml";
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(loaderForm));
+        String gameForm = "/com/solovev/quiz_game/UI/gameForm.fxml";
+
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(gameForm));
+
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Hello!");
         stage.setScene(scene);
