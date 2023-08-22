@@ -4,6 +4,7 @@ import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.repositories.Repository;
+import com.solovev.quiz_game.util.TabFactory;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -19,10 +20,12 @@ public class GameForm implements ControllerData<Quiz> {
     public TextField textFieldCorrectAnswers;
     public TextField textFieldCorrectRate;
     public TabPane tabPainMain;
+
     private int questionCounter;
     private final Map<Integer, Question> questionMap = new HashMap<>();//keys starts from one
     private final Button prevButton = new Button("Previous");
     private Button nextButton = new Button("Next");
+    private TabFactory tabFactory= new TabFactory(prevButton,nextButton);
 
 
     /**
@@ -46,46 +49,13 @@ public class GameForm implements ControllerData<Quiz> {
      */
     public Tab tabFactory(Question question) {
         questionMap.put(++questionCounter, question);
-        Tab result = new Tab("Question " + questionCounter++);
-        VBox mainVbox = new VBox();
-
-        Label questionLabel = new Label(question.getQuestion());
-        questionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15;");
-
-        mainVbox.getChildren().add(questionLabel);
-        mainVbox.getChildren().add(radioButtonsAnswersFactory(question));
-
-        HBox buttons = new HBox();
-        buttons.getChildren().addAll(prevButton,nextButton);
-
-        mainVbox.getChildren().add(buttons);
-
-        result.setContent(mainVbox);
-        return result;
+        return new TabFactory(prevButton,nextButton).createTab(questionCounter,question); //todo refactor new
     }
 
-    /**
-     * Creates radio button groups based on the answers
-     *
-     * @param question to create buttons from
-     * @return group of exclusive buttons
-     */
-    private VBox radioButtonsAnswersFactory(Question question) {
-        List<RadioButton> answers = new ArrayList<>();
-        question.getIncorrectAnswers().forEach(q -> answers.add(new RadioButton(q)));
-        answers.add(new RadioButton(question.getCorrectAnswer()));
-        Collections.shuffle(answers);
 
-        ToggleGroup tg = new ToggleGroup();
-        answers.forEach(a -> a.setToggleGroup(tg));
-        VBox box = new VBox();
-        box.getChildren().addAll(answers);
-
-        return box;
-    }
 
     /**
-     * Initializes buttons
+     * Initializes button actions
      */
     private void buttonInitializer() {
         prevButton.setOnAction(event -> {
@@ -106,9 +76,11 @@ public class GameForm implements ControllerData<Quiz> {
 
     @Override
     public void initData(Quiz quiz) {
-        Collection<Tab> tabs = tabPainMain.getTabs();
-        tabs.addAll(quiz.getQuestions().stream().map(this::tabFactory).toList());
+        for(Question q : quiz.getQuestions()){
+            tabPainMain.getTabs().add(tabFactory(q));
+        }
 
+        buttonInitializer();
     }
 
 

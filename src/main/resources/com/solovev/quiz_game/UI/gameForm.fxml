@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@nord-light.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.solovev.quiz_game.controllers.GameForm">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@bootstrap3.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.solovev.quiz_game.controllers.GameForm">
    <children>
       <TabPane fx:id="tabPainMain" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Results">
+          <Tab style="-fx-background-color: #b0e3f7;" text="Results">
                <content>
                   <AnchorPane prefHeight="360.0" prefWidth="600.0">
                      <children>
@@ -29,7 +35,7 @@
                             <TableColumn editable="false" prefWidth="146.0" text="Correctness" />
                           </columns>
                         </TableView>
-                        <Button layoutX="242.0" layoutY="318.0" mnemonicParsing="false" onAction="#checkResults" prefHeight="25.0" prefWidth="116.0" stylesheets="@nord-light.css" text="Check results">
+                        <Button layoutX="242.0" layoutY="318.0" mnemonicParsing="false" onAction="#checkResults" prefHeight="25.0" prefWidth="116.0" text="Check results">
                            <styleClass>
                               <String fx:value="rounded" />
                               <String fx:value="success" />
