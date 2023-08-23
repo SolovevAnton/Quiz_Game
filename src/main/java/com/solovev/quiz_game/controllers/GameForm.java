@@ -4,29 +4,25 @@ import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.repositories.Repository;
-import com.solovev.quiz_game.util.TabFactory;
+import com.solovev.quiz_game.model.AnswerTab;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 
 public class GameForm implements ControllerData<Quiz> {
+    @FXML
     public TextField textFieldCorrectAnswers;
+    @FXML
     public TextField textFieldCorrectRate;
+    @FXML
     public TabPane tabPainMain;
-
-    private int questionCounter;
-    private final Map<Integer, Question> questionMap = new HashMap<>();//keys starts from one
     private final Button prevButton = new Button("Previous");
     private Button nextButton = new Button("Next");
-    private TabFactory tabFactory= new TabFactory(prevButton,nextButton);
-
+    private Collection<AnswerTab> answerTabs = new ArrayList<>();
 
     /**
      * todo REMOVE used only for tests
@@ -39,20 +35,6 @@ public class GameForm implements ControllerData<Quiz> {
 
     public void checkResults(ActionEvent actionEvent) {
     }
-
-    /**
-     * Creates tab based on the question, and adds it to question map
-     * method made public ONLY FOR TESTING PURPOSES
-     *
-     * @param question to create tab from
-     * @return created tab
-     */
-    public Tab tabFactory(Question question) {
-        questionMap.put(++questionCounter, question);
-        return new TabFactory(prevButton,nextButton).createTab(questionCounter,question); //todo refactor new
-    }
-
-
 
     /**
      * Initializes button actions
@@ -76,8 +58,12 @@ public class GameForm implements ControllerData<Quiz> {
 
     @Override
     public void initData(Quiz quiz) {
+        int questionCounter = 1;
+        Collection<Tab> tabs = tabPainMain.getTabs();
         for(Question q : quiz.getQuestions()){
-            tabPainMain.getTabs().add(tabFactory(q));
+            AnswerTab answerTab = new AnswerTab(q);
+            answerTabs.add(answerTab);
+            tabs.add(answerTab.createTab(questionCounter++));
         }
 
         buttonInitializer();
