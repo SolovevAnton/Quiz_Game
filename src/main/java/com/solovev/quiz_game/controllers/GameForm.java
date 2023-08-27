@@ -5,6 +5,7 @@ import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.repositories.Repository;
 import com.solovev.quiz_game.model.AnswerTab;
+import com.solovev.quiz_game.util.ButtonFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,8 +21,6 @@ public class GameForm implements ControllerData<Quiz> {
     public TextField textFieldCorrectRate;
     @FXML
     public TabPane tabPainMain;
-    private final Button prevButton = new Button("Previous");
-    private Button nextButton = new Button("Next");
     private Collection<AnswerTab> answerTabs = new ArrayList<>();
 
     /**
@@ -36,36 +35,16 @@ public class GameForm implements ControllerData<Quiz> {
     public void checkResults(ActionEvent actionEvent) {
     }
 
-    /**
-     * Initializes button actions
-     */
-    private void buttonInitializer() {
-        prevButton.setOnAction(event -> {
-            int currentIndex = tabPainMain.getSelectionModel().getSelectedIndex();
-            if (currentIndex > 0) {
-                tabPainMain.getSelectionModel().select(currentIndex - 1);
-            }
-        });
-
-        nextButton.setOnAction(event -> {
-            int currentIndex = tabPainMain.getSelectionModel().getSelectedIndex();;
-            if (currentIndex < tabPainMain.getTabs().size() - 1) {
-                tabPainMain.getSelectionModel().select(currentIndex + 1);
-            }
-        });
-
-    }
     @Override
     public void initData(Quiz quiz) {
         int questionCounter = 1;
+        ButtonFactory factory = new ButtonFactory(tabPainMain);
         Collection<Tab> tabs = tabPainMain.getTabs();
         for(Question q : quiz.getQuestions()){
             AnswerTab answerTab = new AnswerTab(q,questionCounter++);
             answerTabs.add(answerTab);
-            tabs.add(answerTab.createTab(prevButton,nextButton));
+            tabs.add(answerTab.createTab(factory.preaviousButton(),factory.nextButton()));
         }
-
-        buttonInitializer();
     }
 
 

@@ -21,7 +21,9 @@ public class AnswerTab {
     private final ToggleGroup toggleGroup = new ToggleGroup();
     private final Question question;
     private final int questionNumber;
+    private final Tab resultTab;
     private boolean isCorrect;
+
 
     /**
      * Adds buttons to be decorated
@@ -30,11 +32,13 @@ public class AnswerTab {
      */
     public AnswerTab(Question question, int questionNumber) {
         mainPane.setPrefWidth(600);
-        mainPane.setPrefHeight(360);
+        mainPane.setPrefHeight(350);
         mainPane.getChildren().addAll(questionText, answers);
 
         this.question = question;
         this.questionNumber = questionNumber;
+
+        resultTab = new Tab("Q" + questionNumber);
 
         labelInitialization();
 
@@ -47,7 +51,7 @@ public class AnswerTab {
         questionText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         questionText.setTextAlignment(TextAlignment.CENTER);
         questionText.setWrapText(true);
-        questionText.setMaxWidth(mainPane.getPrefWidth() * 5.0/6); //little less than main paine
+        questionText.setMaxWidth(mainPane.getPrefWidth() * 5.0 / 6); //little less than main paine
 
         placeLabel();
     }
@@ -55,9 +59,9 @@ public class AnswerTab {
     /**
      * Places the question text
      */
-    private void placeLabel(){
+    private void placeLabel() {
         //positioning
-        questionText.widthProperty().addListener( w -> {
+        questionText.widthProperty().addListener(w -> {
             AnchorPane.setLeftAnchor(questionText,
                     (mainPane.getPrefWidth() - questionText.getWidth()) / 2); //center question text
         });
@@ -72,7 +76,7 @@ public class AnswerTab {
                 }
         );
         questionText.heightProperty().addListener(h -> {
-            AnchorPane.setTopAnchor(answers,questionText.getHeight() + 20 ); //little lower than question text
+            AnchorPane.setTopAnchor(answers, questionText.getHeight() + 20); //little lower than question text
         });
     }
 
@@ -82,29 +86,60 @@ public class AnswerTab {
      * @return created tab
      */
     public Tab createTab() {
-        Tab result = new Tab("Q" + questionNumber);
+
         //adds listener, so if q is answered the title will turn green
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                result.setStyle("-fx-background-color: #93e9be");
+                resultTab.setStyle("-fx-background-color: #93e9be");
                 //checks if answer is correct
                 checkAnswer(newValue);
             }
         });
-
         questionText.setText(question.getQuestion());
-
         answers.getChildren().setAll(radioButtonsAnswersFactory(question));
 
         placeAnswers();
 
-        result.setContent(mainPane);
-        return result;
+        resultTab.setContent(mainPane);
+        mainPane.setLayoutY(10);
+        return resultTab;
     }
-    public Tab createTab(Button leftButton, Button rightButton){
 
-       // mainPane.getChildren().addAll(leftButton,rightButton);
+    public Tab createTab(Button leftButton, Button rightButton) {
+        positionLeftButton(leftButton);
+        positionRightButton(rightButton);
+        mainPane.getChildren().addAll(leftButton, rightButton);
         return createTab();
+    }
+
+    /**
+     * Assigns position to the left button based on the original text borders
+     */
+    private void positionLeftButton(Button leftButton) {
+        AnchorPane.setLeftAnchor(leftButton, (mainPane.getPrefWidth() - questionText.getMaxWidth()) / 2); //sets at the beginning og the text
+        positionButtonHeight(leftButton);
+    }
+
+    /**
+     * Assigns position to the right button based on the original text borders
+     */
+    private void positionRightButton(Button rightButton) {
+        rightButton.widthProperty().addListener(w -> {
+            AnchorPane.setLeftAnchor(rightButton, ((mainPane.getPrefWidth() + questionText.getMaxWidth()) / 2) - rightButton.getWidth()); //sets at the end of the text
+        });
+
+        positionButtonHeight(rightButton);
+    }
+
+    /**
+     * Positions button slightly above bottom of the main pane based on its size
+     *
+     * @param button to position
+     */
+    private void positionButtonHeight(Button button) {
+        button.heightProperty().addListener(h -> {
+            AnchorPane.setTopAnchor(button, mainPane.getPrefHeight() - button.getHeight() - 10); // slightly above bottom
+        });
     }
 
     /**
