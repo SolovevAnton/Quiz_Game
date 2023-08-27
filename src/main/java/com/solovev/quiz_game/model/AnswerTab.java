@@ -2,6 +2,7 @@ package com.solovev.quiz_game.model;
 
 import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.enums.QuestionType;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -48,7 +49,7 @@ public class AnswerTab {
         questionText.setWrapText(true);
         questionText.setMaxWidth(mainPane.getPrefWidth() * 5.0/6); //little less than main paine
 
-
+        placeLabel();
     }
 
     /**
@@ -99,6 +100,11 @@ public class AnswerTab {
 
         result.setContent(mainPane);
         return result;
+    }
+    public Tab createTab(Button leftButton, Button rightButton){
+
+       // mainPane.getChildren().addAll(leftButton,rightButton);
+        return createTab();
     }
 
     /**
