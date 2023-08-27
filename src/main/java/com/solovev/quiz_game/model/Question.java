@@ -110,8 +110,8 @@ public class Question {
         return category;
     }
 
-    public QuestionType isMultipleChoice() {
-        return questionType;
+    public boolean isMultipleChoice() {
+        return questionType == QuestionType.MULTIPLE;
     }
 
     public Difficulty getDifficulty() {

@@ -28,7 +28,7 @@ public class GameForm implements ControllerData<Quiz> {
      * todo REMOVE used only for tests
      */
     public void initialize() throws IOException {
-        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\questionsWithHTMLCodes.json");
+        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\savedNormalQuiz.json");
         Repository<Quiz> fileRepo = new QuizRepository(file, false);
         initData(fileRepo.takeData());
     }
