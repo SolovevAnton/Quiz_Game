@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class GameForm implements ControllerData<Quiz> {
     @FXML
@@ -39,12 +40,24 @@ public class GameForm implements ControllerData<Quiz> {
     public void initData(Quiz quiz) {
         int questionCounter = 1;
         ButtonFactory factory = new ButtonFactory(tabPainMain);
-        Collection<Tab> tabs = tabPainMain.getTabs();
-        for(Question q : quiz.getQuestions()){
-            AnswerTab answerTab = new AnswerTab(q,questionCounter++);
+        List<Tab> tabs = tabPainMain.getTabs();
+        for (Question q : quiz.getQuestions()) {
+            int questionNumber = questionCounter++;
+            AnswerTab answerTab = new AnswerTab(q, questionNumber);
             answerTabs.add(answerTab);
-            tabs.add(answerTab.createTab(factory.preaviousButton(),factory.nextButton()));
+
+            //checks and defines behaviour if its first or last tab
+            Tab tabToAdd = questionNumber == 1
+                    ? answerTab.createTab(factory.nextButton(), false)
+                    : questionNumber == quiz.size()
+                    ? answerTab.createTab(factory.preaviousButton(), true)
+                    : answerTab.createTab(factory.preaviousButton(), factory.nextButton());
+
+            tabs.add(tabToAdd);
         }
+
+        //removes and adds results tub
+        tabs.add(tabs.remove(0));
     }
 
 

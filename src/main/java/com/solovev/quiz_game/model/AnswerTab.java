@@ -21,9 +21,12 @@ public class AnswerTab {
     private final ToggleGroup toggleGroup = new ToggleGroup();
     private final Question question;
     private final int questionNumber;
+    /**
+     * Margin before first text line
+     */
+    private final double upperMargin = 20.0;
     private final Tab resultTab;
     private boolean isCorrect;
-
 
     /**
      * Adds buttons to be decorated
@@ -42,42 +45,6 @@ public class AnswerTab {
 
         labelInitialization();
 
-    }
-
-    /**
-     * To initialize label, and position it in the stack pane
-     */
-    private void labelInitialization() {
-        questionText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-        questionText.setTextAlignment(TextAlignment.CENTER);
-        questionText.setWrapText(true);
-        questionText.setMaxWidth(mainPane.getPrefWidth() * 5.0 / 6); //little less than main paine
-
-        placeLabel();
-    }
-
-    /**
-     * Places the question text
-     */
-    private void placeLabel() {
-        //positioning
-        questionText.widthProperty().addListener(w -> {
-            AnchorPane.setLeftAnchor(questionText,
-                    (mainPane.getPrefWidth() - questionText.getWidth()) / 2); //center question text
-        });
-    }
-
-    /**
-     * to initialize and place VBox with answers
-     */
-    private void placeAnswers() {
-        answers.widthProperty().addListener(w -> {
-                    AnchorPane.setLeftAnchor(answers, (mainPane.getPrefWidth() - answers.getWidth()) / 2); //center width
-                }
-        );
-        questionText.heightProperty().addListener(h -> {
-            AnchorPane.setTopAnchor(answers, questionText.getHeight() + 20); //little lower than question text
-        });
     }
 
     /**
@@ -105,10 +72,32 @@ public class AnswerTab {
         return resultTab;
     }
 
+    /**
+     * Creates tab with two buttons
+     * @param leftButton to add to the left
+     * @param rightButton to add to the right
+     * @return created tab
+     */
     public Tab createTab(Button leftButton, Button rightButton) {
         positionLeftButton(leftButton);
         positionRightButton(rightButton);
         mainPane.getChildren().addAll(leftButton, rightButton);
+        return createTab();
+    }
+
+    /**
+     * Creates tab with one button
+     * @param button to ba added
+     * @param isLeftButton if true will be added left, else right
+     * @return created tab
+     */
+    public Tab createTab(Button button, boolean isLeftButton){
+        if(isLeftButton){
+            positionLeftButton(button);
+        } else {
+            positionRightButton(button);
+        }
+        mainPane.getChildren().add(button);
         return createTab();
     }
 
@@ -139,6 +128,44 @@ public class AnswerTab {
     private void positionButtonHeight(Button button) {
         button.heightProperty().addListener(h -> {
             AnchorPane.setTopAnchor(button, mainPane.getPrefHeight() - button.getHeight() - 10); // slightly above bottom
+        });
+    }
+
+    /**
+     * To initialize label, and position it in the stack pane
+     */
+    private void labelInitialization() {
+        questionText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        questionText.setTextAlignment(TextAlignment.CENTER);
+        questionText.setWrapText(true);
+        questionText.setMaxWidth(mainPane.getPrefWidth() * 5.0 / 6); //little less than main paine
+
+        placeLabel();
+    }
+
+    /**
+     * Places the question text
+     */
+    private void placeLabel() {
+        //positioning
+        questionText.widthProperty().addListener(w -> {
+            AnchorPane.setLeftAnchor(questionText,
+                    (mainPane.getPrefWidth() - questionText.getWidth()) / 2); //center question text width
+        });
+
+        AnchorPane.setTopAnchor(questionText, upperMargin); // margin from top
+    }
+
+    /**
+     * to initialize and place VBox with answers
+     */
+    private void placeAnswers() {
+        answers.widthProperty().addListener(w -> {
+                    AnchorPane.setLeftAnchor(answers, (mainPane.getPrefWidth() - answers.getWidth()) / 2); //center width
+                }
+        );
+        questionText.heightProperty().addListener(h -> {
+            AnchorPane.setTopAnchor(answers, questionText.getHeight() + upperMargin + 20); //little lower than question text
         });
     }
 
@@ -185,5 +212,9 @@ public class AnswerTab {
 
     public boolean isCorrect() {
         return isCorrect;
+    }
+
+    public int getQuestionNumber() {
+        return questionNumber;
     }
 }
