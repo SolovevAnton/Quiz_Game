@@ -19,6 +19,7 @@ public class AnswerTab {
     private final VBox answers = new VBox(10); // Spacing between rows
     private final ToggleGroup toggleGroup = new ToggleGroup();
     private final Question question;
+    private final int questionNumber;
     private boolean isCorrect;
 
     /**
@@ -26,12 +27,13 @@ public class AnswerTab {
      *
      * @param question this tab is based on
      */
-    public AnswerTab(Question question) {
+    public AnswerTab(Question question, int questionNumber) {
         mainPane.setPrefWidth(600);
         mainPane.setPrefHeight(360);
         mainPane.getChildren().addAll(questionText, answers);
 
         this.question = question;
+        this.questionNumber = questionNumber;
 
         labelInitialization();
 
@@ -44,40 +46,41 @@ public class AnswerTab {
         questionText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         questionText.setTextAlignment(TextAlignment.CENTER);
         questionText.setWrapText(true);
-        questionText.setPrefWidth(mainPane.getPrefWidth() * 5.0 / 6);
-        questionText.setPrefHeight(100);
+        questionText.setMaxWidth(mainPane.getPrefWidth() * 5.0/6); //little less than main paine
+
+
+    }
+
+    /**
+     * Places the question text
+     */
+    private void placeLabel(){
         //positioning
-        AnchorPane.setLeftAnchor(questionText,
-                (mainPane.getPrefWidth() - questionText.getPrefWidth()) / 2);
+        questionText.widthProperty().addListener( w -> {
+            AnchorPane.setLeftAnchor(questionText,
+                    (mainPane.getPrefWidth() - questionText.getWidth()) / 2); //center question text
+        });
     }
 
     /**
      * to initialize and place VBox with answers
      */
     private void placeAnswers() {
-        //define anchor depending on the question type
-        double leftAnchor;
-        double topAnchor;
-        if(question.isMultipleChoice()){
-            leftAnchor = AnchorPane.getLeftAnchor(questionText); // same as text
-            topAnchor = questionText.getPrefHeight();
-        } else {
-            leftAnchor = (mainPane.getPrefWidth()/2) - 55; // slightly left from center
-            topAnchor = questionText.getPrefHeight() + 10 ; //slightly down
-        }
-
-        // Center the VBox within the AnchorPane
-        AnchorPane.setLeftAnchor(answers, leftAnchor); // same as text
-        AnchorPane.setTopAnchor(answers, topAnchor);
+        answers.widthProperty().addListener(w -> {
+                    AnchorPane.setLeftAnchor(answers, (mainPane.getPrefWidth() - answers.getWidth()) / 2); //center width
+                }
+        );
+        questionText.heightProperty().addListener(h -> {
+            AnchorPane.setTopAnchor(answers,questionText.getHeight() + 20 ); //little lower than question text
+        });
     }
 
     /**
-     * Creates tab with two buttons, and decorates this buttons
+     * Creates tab without buttons
      *
-     * @param questionNumber number of the question
      * @return created tab
      */
-    public Tab createTab(int questionNumber) {
+    public Tab createTab() {
         Tab result = new Tab("Q" + questionNumber);
         //adds listener, so if q is answered the title will turn green
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -89,6 +92,7 @@ public class AnswerTab {
         });
 
         questionText.setText(question.getQuestion());
+
         answers.getChildren().setAll(radioButtonsAnswersFactory(question));
 
         placeAnswers();

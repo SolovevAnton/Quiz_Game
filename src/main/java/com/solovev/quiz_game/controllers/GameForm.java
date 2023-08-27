@@ -54,6 +54,14 @@ public class GameForm implements ControllerData<Quiz> {
             }
         });
 
+        buttonDecorator();
+    }
+
+    /**
+     * Decorates buttons
+     */
+    private void buttonDecorator(){
+
     }
 
     @Override
@@ -61,9 +69,9 @@ public class GameForm implements ControllerData<Quiz> {
         int questionCounter = 1;
         Collection<Tab> tabs = tabPainMain.getTabs();
         for(Question q : quiz.getQuestions()){
-            AnswerTab answerTab = new AnswerTab(q);
+            AnswerTab answerTab = new AnswerTab(q,questionCounter++);
             answerTabs.add(answerTab);
-            tabs.add(answerTab.createTab(questionCounter++));
+            tabs.add(answerTab.createTab());
         }
 
         buttonInitializer();
