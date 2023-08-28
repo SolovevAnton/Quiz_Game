@@ -1,19 +1,22 @@
 package com.solovev.quiz_game.controllers;
 
+import com.solovev.quiz_game.model.AnswerTab;
 import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.repositories.Repository;
-import com.solovev.quiz_game.model.AnswerTab;
 import com.solovev.quiz_game.util.ButtonFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class GameForm implements ControllerData<Quiz> {
     @FXML
@@ -22,7 +25,7 @@ public class GameForm implements ControllerData<Quiz> {
     public TextField textFieldCorrectRate;
     @FXML
     public TabPane tabPainMain;
-    private Collection<AnswerTab> answerTabs = new ArrayList<>();
+    private final Collection<AnswerTab> answerTabs = new ArrayList<>();
 
     /**
      * todo REMOVE used only for tests
@@ -50,7 +53,7 @@ public class GameForm implements ControllerData<Quiz> {
             Tab tabToAdd = questionNumber == 1
                     ? answerTab.createTab(factory.nextButton(), false)
                     : questionNumber == quiz.size()
-                    ? answerTab.createTab(factory.preaviousButton(), true)
+                    ? answerTab.createTab(factory.preaviousButton(), factory.finishButton())
                     : answerTab.createTab(factory.preaviousButton(), factory.nextButton());
 
             tabs.add(tabToAdd);

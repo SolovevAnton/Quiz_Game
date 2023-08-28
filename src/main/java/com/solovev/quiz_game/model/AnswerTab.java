@@ -1,10 +1,8 @@
 package com.solovev.quiz_game.model;
 
-import com.solovev.quiz_game.model.Question;
-import com.solovev.quiz_game.model.enums.QuestionType;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -26,7 +24,7 @@ public class AnswerTab {
      */
     private final double upperMargin = 20.0;
     private final Tab resultTab;
-    private boolean isCorrect;
+    private String selectedAnswer;
 
     /**
      * Adds buttons to be decorated
@@ -59,7 +57,7 @@ public class AnswerTab {
             if (newValue != null) {
                 resultTab.setStyle("-fx-background-color: #93e9be");
                 //checks if answer is correct
-                checkAnswer(newValue);
+                selectedAnswer = ((RadioButton)newValue).getText();
             }
         });
         questionText.setText(question.getQuestion());
@@ -199,19 +197,9 @@ public class AnswerTab {
         return answersForVBox;
     }
 
-    /**
-     * Checks answer and sets is Correct flag to correct or not
-     *
-     * @param toggle selected toggle. will bew typecast to radiobutton
-     * @return what is set to isCorrect after this method
-     */
-    private boolean checkAnswer(Toggle toggle) {
-        isCorrect = ((RadioButton) toggle).getText().equals(question.getCorrectAnswer());
-        return isCorrect;
-    }
 
     public boolean isCorrect() {
-        return isCorrect;
+        return question.getCorrectAnswer().equals(selectedAnswer);
     }
 
     public int getQuestionNumber() {
