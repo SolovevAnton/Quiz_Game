@@ -18,23 +18,37 @@
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Label layoutX="14.0" layoutY="45.0" text="Overall correct answers: " />
-                        <TextField fx:id="textFieldCorrectAnswers" editable="false" layoutX="165.0" layoutY="37.0" prefHeight="36.0" prefWidth="40.0" />
-                        <Label layoutX="300.0" layoutY="45.0" text="Correct Answer Rate: " />
-                        <TextField fx:id="textFieldCorrectRate" editable="false" layoutX="433.0" layoutY="37.0" prefHeight="36.0" prefWidth="62.0" />
-                        <TableView layoutY="80.0" prefHeight="227.0" prefWidth="600.0">
+                        <Label layoutX="385.0" layoutY="56.0" text="Overall correct answers: ">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
+                        <Label fx:id="labelCorrectAnswers" layoutX="525.0" layoutY="56.0" text="?/X">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="14.0" layoutY="56.0" text="Correct Answer Rate: ">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
+                        <TableView fx:id="answersTable" layoutY="80.0" prefHeight="227.0" prefWidth="600.0">
                           <columns>
-                              <TableColumn editable="false" prefWidth="49.0" text="№" />
-                            <TableColumn editable="false" prefWidth="403.0" sortable="false" text="Question" />
-                            <TableColumn editable="false" prefWidth="146.0" text="Correctness" />
+                              <TableColumn fx:id="numberColumn" editable="false" prefWidth="49.0" text="№" />
+                            <TableColumn fx:id="questionColumn" editable="false" prefWidth="403.0" sortable="false" text="Question" />
+                            <TableColumn fx:id="correctnessColumn" editable="false" prefWidth="146.0" text="Correctness" />
                           </columns>
                         </TableView>
-                        <Button layoutX="242.0" layoutY="318.0" mnemonicParsing="false" onAction="#checkResults" prefHeight="25.0" prefWidth="116.0" text="Check results">
+                        <Button layoutX="235.0" layoutY="317.0" mnemonicParsing="false" onAction="#checkResults" prefHeight="25.0" prefWidth="116.0" text="Check results">
                            <styleClass>
-                              <String fx:value="rounded" />
                               <String fx:value="success" />
                            </styleClass>
                         </Button>
+                        <Label fx:id="labelCorrectPercent" layoutX="150.0" layoutY="56.0" prefHeight="17.0" prefWidth="28.0" text="??%">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <CheckBox fx:id="boxCorrectAnswers" layoutX="379.0" layoutY="320.0" mnemonicParsing="false" text="Show Correct Answers" />
                      </children>
                   </AnchorPane>
                </content>

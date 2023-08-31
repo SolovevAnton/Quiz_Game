@@ -205,4 +205,8 @@ public class AnswerTab {
     public int getQuestionNumber() {
         return questionNumber;
     }
+
+    public Question getQuestion() {
+        return question;
+    }
 }
