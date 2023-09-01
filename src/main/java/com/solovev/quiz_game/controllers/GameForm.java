@@ -107,7 +107,7 @@ public class GameForm implements ControllerData<Quiz> {
      * todo REMOVE used only for tests
      */
     public void initialize() throws IOException {
-        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\OneQuestionQuizz.json");
+        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\normalQuizz.json");
         Repository<Quiz> fileRepo = new QuizRepository(file, false);
         initData(fileRepo.takeData());
     }
@@ -117,13 +117,14 @@ public class GameForm implements ControllerData<Quiz> {
         answersTable.refresh();
         //setAnswers
         answersColumn.setVisible(boxCorrectAnswers.isSelected());
-
         //labels
         long correctAnswers = answerTabs.stream().filter(AnswerTab::isCorrect).count();
         labelCorrectAnswers.setText(labelCorrectAnswers.getText().replaceFirst(".+/", correctAnswers + "/"));
         String correctPercent = String.format("%d", correctAnswers * 100 / answerTabs.size());
         labelCorrectPercent.setText(labelCorrectPercent.getText().replaceFirst(".+%", correctPercent + "%"));
 
+        //checks all actions for the tabs
+        answerTabs.forEach(a -> a.check(boxCorrectAnswers.isSelected()));
     }
 
     @Override

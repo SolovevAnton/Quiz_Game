@@ -52,7 +52,7 @@
                                 </Label>
                                 <CheckBox fx:id="boxCorrectAnswers" layoutX="377.0" layoutY="318.0" mnemonicParsing="false" text="Show Correct Answers">
                                     <tooltip>
-                                    <Tooltip text="Answers will be shown on the right side of the table" />
+                                    <Tooltip text="Answers will be shown on the right side of the table and be highlighted in tabs" />
                                 </tooltip>
                            <font>
                               <Font name="System Italic" size="14.0" />

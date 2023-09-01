@@ -19,12 +19,24 @@ public class AnswerTab {
     private final ToggleGroup toggleGroup = new ToggleGroup();
     private final Question question;
     private final int questionNumber;
+    private RadioButton correctAnswerRadioButton;
     /**
      * Margin before first text line
      */
     private final double upperMargin = 20.0;
     private final Tab resultTab;
     private String selectedAnswer;
+
+    private enum Styles {
+        ANSWERED("-fx-background-color: #9bfaf5"),
+        CORRECT("-fx-background-color: #93e9be"),
+        INCORRECT("-fx-background-color: #fc7777");
+        private String style;
+
+        Styles(String style) {
+            this.style = style;
+        }
+    }
 
     /**
      * Adds buttons to be decorated
@@ -55,7 +67,7 @@ public class AnswerTab {
         //adds listener, so if q is answered the title will turn green
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                resultTab.setStyle("-fx-background-color: #93e9be");
+                resultTab.setStyle(Styles.ANSWERED.style);
                 //writes selected answer
                 selectedAnswer = ((RadioButton) newValue).getText();
             }
@@ -175,10 +187,11 @@ public class AnswerTab {
      * @param question to create buttons from
      * @return group of exclusive buttons
      */
-    private Collection<RadioButton> radioButtonsAnswersFactory(Question question) { //todo add different options for diff questions
+    private Collection<RadioButton> radioButtonsAnswersFactory(Question question) {
         List<RadioButton> answersForVBox = new ArrayList<>();
         question.getIncorrectAnswers().forEach(q -> answersForVBox.add(new RadioButton(q)));
-        answersForVBox.add(new RadioButton(question.getCorrectAnswer()));
+        correctAnswerRadioButton = new RadioButton(question.getCorrectAnswer());
+        answersForVBox.add(correctAnswerRadioButton);
 
         Font font;
         //sets different font and order in vbox for multiple and boolean questions
@@ -190,7 +203,7 @@ public class AnswerTab {
             font = Font.font(17);
         }
 
-        //sets font and adds to toogle group
+        //sets font and adds to toggle group
         answersForVBox.forEach(a -> {
             a.setFont(font);
             a.setToggleGroup(toggleGroup);
@@ -199,6 +212,17 @@ public class AnswerTab {
         return answersForVBox;
     }
 
+    /**
+     * Does all necessary actions associated with check answers
+     *
+     * @param showCorrect if true sets different style for the correctAnswer
+     */
+    public void check(Boolean showCorrect) {
+        resultTab.setStyle(isCorrect() ? Styles.CORRECT.style : Styles.INCORRECT.style);
+        if (showCorrect) {
+            correctAnswerRadioButton.setStyle("-fx-font-weight: bold; -fx-font-style: italic;; -fx-text-fill: #49be25;-fx-font-size: 18px;");
+        }
+    }
 
     public boolean isCorrect() {
         return question.getCorrectAnswer().equals(selectedAnswer);
@@ -210,5 +234,9 @@ public class AnswerTab {
 
     public Question getQuestion() {
         return question;
+    }
+
+    public boolean isAnswered() {
+        return selectedAnswer != null;
     }
 }
