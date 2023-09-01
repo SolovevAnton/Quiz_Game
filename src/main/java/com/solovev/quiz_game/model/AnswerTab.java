@@ -56,8 +56,8 @@ public class AnswerTab {
         toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 resultTab.setStyle("-fx-background-color: #93e9be");
-                //checks if answer is correct
-                selectedAnswer = ((RadioButton)newValue).getText();
+                //writes selected answer
+                selectedAnswer = ((RadioButton) newValue).getText();
             }
         });
         questionText.setText(question.getQuestion());
@@ -72,7 +72,8 @@ public class AnswerTab {
 
     /**
      * Creates tab with two buttons
-     * @param leftButton to add to the left
+     *
+     * @param leftButton  to add to the left
      * @param rightButton to add to the right
      * @return created tab
      */
@@ -85,12 +86,13 @@ public class AnswerTab {
 
     /**
      * Creates tab with one button
-     * @param button to ba added
+     *
+     * @param button       to ba added
      * @param isLeftButton if true will be added left, else right
      * @return created tab
      */
-    public Tab createTab(Button button, boolean isLeftButton){
-        if(isLeftButton){
+    public Tab createTab(Button button, boolean isLeftButton) {
+        if (isLeftButton) {
             positionLeftButton(button);
         } else {
             positionRightButton(button);

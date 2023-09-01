@@ -81,8 +81,8 @@ public class GameForm implements ControllerData<Quiz> {
 
                     {
                         btn.setDisable(true);
-                        btn.setStyle("-fx-opacity: 1;");
-                        btn.setAlignment(Pos.CENTER);
+                        btn.setStyle("-fx-font-size: 15px; -fx-opacity: 1;");
+                        btn.setAlignment(Pos.CENTER_RIGHT);
                     }
 
                     @Override
@@ -90,12 +90,11 @@ public class GameForm implements ControllerData<Quiz> {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
-                            setText(null);
                         } else {
                             btn.setSelected(answersTable.getItems().get(getIndex()).isCorrect());
                             setGraphic(btn);
-                            setText(null);
                         }
+                        setText(null);
                     }
                 }
         );
@@ -106,20 +105,27 @@ public class GameForm implements ControllerData<Quiz> {
      * todo REMOVE used only for tests
      */
     public void initialize() throws IOException {
-        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\savedNormalQuiz.json");
+        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\questionsWithHTMLCodes.json");
         Repository<Quiz> fileRepo = new QuizRepository(file, false);
         initData(fileRepo.takeData());
     }
 
     public void checkResults(ActionEvent actionEvent) { // todo add alert
         answersTable.setItems(FXCollections.observableList(answerTabs));
+        answersTable.refresh();
+
+        //labels
+        long correctAnswers = answerTabs.stream().filter(AnswerTab::isCorrect).count();
+        labelCorrectAnswers.setText(labelCorrectAnswers.getText().replaceFirst(".+/", correctAnswers + "/"));
+        String correctPercent = String.format("%d", correctAnswers * 100 / answerTabs.size());
+        labelCorrectPercent.setText(labelCorrectPercent.getText().replaceFirst(".+%", correctPercent + "%"));
     }
 
     @Override
     public void initData(Quiz quiz) {
         initializeTabs(quiz);
         //initialize label
-        labelCorrectAnswers.setText(labelCorrectAnswers.getText().replace("X", String.valueOf(quiz.size())));
+        labelCorrectAnswers.setText(labelCorrectAnswers.getText().replace("XX", String.valueOf(quiz.size())));
         //answer table
         initializeAnswersTable();
     }
