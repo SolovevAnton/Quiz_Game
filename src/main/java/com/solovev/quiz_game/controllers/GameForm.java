@@ -6,10 +6,7 @@ import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.repositories.Repository;
 import com.solovev.quiz_game.util.ButtonFactory;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,7 +17,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class GameForm implements ControllerData<Quiz> {
@@ -40,6 +36,7 @@ public class GameForm implements ControllerData<Quiz> {
     public TableColumn<AnswerTab, String> questionColumn;
     @FXML
     public TableColumn<AnswerTab, Integer> numberColumn;
+    private TableColumn<AnswerTab,String> answersColumn = new TableColumn<>("Answers");
 
     private final List<AnswerTab> answerTabs = new ArrayList<>();
 
@@ -98,6 +95,11 @@ public class GameForm implements ControllerData<Quiz> {
                     }
                 }
         );
+
+        //answers column creation
+        answersColumn.setVisible(false);
+        answersColumn.setCellValueFactory(callback -> new ReadOnlyObjectWrapper<String>(callback.getValue().getQuestion().getCorrectAnswer()));
+        answersTable.getColumns().add(answersColumn);
     }
 
 
@@ -105,7 +107,7 @@ public class GameForm implements ControllerData<Quiz> {
      * todo REMOVE used only for tests
      */
     public void initialize() throws IOException {
-        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\questionsWithHTMLCodes.json");
+        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\OneQuestionQuizz.json");
         Repository<Quiz> fileRepo = new QuizRepository(file, false);
         initData(fileRepo.takeData());
     }
@@ -113,17 +115,21 @@ public class GameForm implements ControllerData<Quiz> {
     public void checkResults(ActionEvent actionEvent) { // todo add alert
         answersTable.setItems(FXCollections.observableList(answerTabs));
         answersTable.refresh();
+        //setAnswers
+        answersColumn.setVisible(boxCorrectAnswers.isSelected());
 
         //labels
         long correctAnswers = answerTabs.stream().filter(AnswerTab::isCorrect).count();
         labelCorrectAnswers.setText(labelCorrectAnswers.getText().replaceFirst(".+/", correctAnswers + "/"));
         String correctPercent = String.format("%d", correctAnswers * 100 / answerTabs.size());
         labelCorrectPercent.setText(labelCorrectPercent.getText().replaceFirst(".+%", correctPercent + "%"));
+
     }
 
     @Override
     public void initData(Quiz quiz) {
         initializeTabs(quiz);
+
         //initialize label
         labelCorrectAnswers.setText(labelCorrectAnswers.getText().replace("XX", String.valueOf(quiz.size())));
         //answer table
