@@ -1,6 +1,7 @@
-package com.solovev.quiz_game.util;
+package com.solovev.quiz_game.util.validators;
 
 import com.solovev.quiz_game.model.Quiz;
+import com.solovev.quiz_game.util.validators.Validator;
 
 /**
  * Validates quiz with response code

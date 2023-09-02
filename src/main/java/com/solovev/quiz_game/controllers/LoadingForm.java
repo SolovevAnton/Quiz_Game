@@ -1,13 +1,15 @@
 package com.solovev.quiz_game.controllers;
 
 import com.solovev.quiz_game.model.Category;
-import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.model.Request;
 import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.util.*;
+import com.solovev.quiz_game.util.validators.QuizValidator;
+import com.solovev.quiz_game.util.validators.RequestValidator;
+import com.solovev.quiz_game.util.validators.Validator;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.util.Callback;

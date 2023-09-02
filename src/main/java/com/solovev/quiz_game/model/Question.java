@@ -110,6 +110,7 @@ public class Question {
         return category;
     }
 
+    @JsonIgnore
     public boolean isMultipleChoice() {
         return questionType == QuestionType.MULTIPLE;
     }

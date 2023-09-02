@@ -6,6 +6,7 @@ import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.repositories.Repository;
 import com.solovev.quiz_game.util.ButtonFactory;
+import com.solovev.quiz_game.util.WindowManager;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -36,7 +37,7 @@ public class GameForm implements ControllerData<Quiz> {
     public TableColumn<AnswerTab, String> questionColumn;
     @FXML
     public TableColumn<AnswerTab, Integer> numberColumn;
-    private TableColumn<AnswerTab,String> answersColumn = new TableColumn<>("Answers");
+    private TableColumn<AnswerTab, String> answersColumn = new TableColumn<>("Answers");
 
     private final List<AnswerTab> answerTabs = new ArrayList<>();
 
@@ -112,19 +113,25 @@ public class GameForm implements ControllerData<Quiz> {
         initData(fileRepo.takeData());
     }
 
-    public void checkResults(ActionEvent actionEvent) { // todo add alert
-        answersTable.setItems(FXCollections.observableList(answerTabs));
-        answersTable.refresh();
-        //setAnswers
-        answersColumn.setVisible(boxCorrectAnswers.isSelected());
-        //labels
-        long correctAnswers = answerTabs.stream().filter(AnswerTab::isCorrect).count();
-        labelCorrectAnswers.setText(labelCorrectAnswers.getText().replaceFirst(".+/", correctAnswers + "/"));
-        String correctPercent = String.format("%d", correctAnswers * 100 / answerTabs.size());
-        labelCorrectPercent.setText(labelCorrectPercent.getText().replaceFirst(".+%", correctPercent + "%"));
+    public void checkResults(ActionEvent actionEvent) {
+        if (
+                answerTabs.stream().filter(AnswerTab::isAnswered).count() < answerTabs.size() //checks if not all are answered
+        ) {
+            WindowManager.showAlertWithoutHeaderText("Cannot proceed", "Please select answer for every question", Alert.AlertType.WARNING);
+        } else {
+            answersTable.setItems(FXCollections.observableList(answerTabs));
+            answersTable.refresh();
+            //setAnswers
+            answersColumn.setVisible(boxCorrectAnswers.isSelected());
+            //labels
+            long correctAnswers = answerTabs.stream().filter(AnswerTab::isCorrect).count();
+            labelCorrectAnswers.setText(labelCorrectAnswers.getText().replaceFirst(".+/", correctAnswers + "/"));
+            String correctPercent = String.format("%d", correctAnswers * 100 / answerTabs.size());
+            labelCorrectPercent.setText(labelCorrectPercent.getText().replaceFirst(".+%", correctPercent + "%"));
 
-        //checks all actions for the tabs
-        answerTabs.forEach(a -> a.check(boxCorrectAnswers.isSelected()));
+            //checks all actions for the tabs
+            answerTabs.forEach(a -> a.check(boxCorrectAnswers.isSelected()));
+        }
     }
 
     @Override

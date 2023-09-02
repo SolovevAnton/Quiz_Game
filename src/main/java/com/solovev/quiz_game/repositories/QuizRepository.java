@@ -23,7 +23,8 @@ public class QuizRepository implements Repository<Quiz> {
      * @param isEncrypted shows if the source is encrypted or not, if true uses decryption
      */
     public QuizRepository(File file, boolean isEncrypted) throws IOException {
-        this.quiz = objectMapper.readValue(file, Quiz.class);
+        this.quiz = objectMapper.
+                readValue(file, Quiz.class);
 
         if (isEncrypted) {
             encryptOrDecryptQuiz();

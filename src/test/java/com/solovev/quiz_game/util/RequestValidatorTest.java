@@ -7,6 +7,7 @@ import com.solovev.quiz_game.model.Request;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.repositories.QuizRepository;
+import com.solovev.quiz_game.util.validators.RequestValidator;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;

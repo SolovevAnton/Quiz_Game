@@ -1,8 +1,9 @@
-package com.solovev.quiz_game.util;
+package com.solovev.quiz_game.util.validators;
 
 import com.solovev.quiz_game.model.Request;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.repositories.AvailableQuestionsRepository;
+import com.solovev.quiz_game.util.validators.Validator;
 
 import java.io.IOException;
 import java.util.Map;

@@ -20,7 +20,7 @@ public class URLDataGetter {
         byte[] bytes;
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(url.openStream())) {
             bytes = bufferedInputStream.readAllBytes();
-            if (bytes.length <= 0) {
+            if (bytes.length == 0) {
                 throw new MalformedURLException("URL content is empty");
             }
         }
