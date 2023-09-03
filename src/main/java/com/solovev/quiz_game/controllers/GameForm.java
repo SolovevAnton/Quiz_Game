@@ -103,16 +103,6 @@ public class GameForm implements ControllerData<Quiz> {
         answersTable.getColumns().add(answersColumn);
     }
 
-
-    /**
-     * todo REMOVE used only for tests
-     */
-    public void initialize() throws IOException {
-        File file = new File("D:\\Git\\Practice_Projects\\JavaSE\\Quiz_Game\\src\\test\\resources\\normalQuizz.json");
-        Repository<Quiz> fileRepo = new QuizRepository(file, false);
-        initData(fileRepo.takeData());
-    }
-
     public void checkResults(ActionEvent actionEvent) {
         if (
                 answerTabs.stream().filter(AnswerTab::isAnswered).count() < answerTabs.size() //checks if not all are answered
