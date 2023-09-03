@@ -2,11 +2,13 @@ package com.solovev.quiz_game.controllers;
 
 import com.solovev.quiz_game.model.Category;
 import com.solovev.quiz_game.model.Request;
-import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
+import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.repositories.QuizRepository;
-import com.solovev.quiz_game.util.*;
+import com.solovev.quiz_game.util.FormsManager;
+import com.solovev.quiz_game.util.URLCreator;
+import com.solovev.quiz_game.util.WindowManager;
 import com.solovev.quiz_game.util.validators.QuizValidator;
 import com.solovev.quiz_game.util.validators.RequestValidator;
 import com.solovev.quiz_game.util.validators.Validator;
@@ -17,6 +19,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Optional;
 
 public class LoadingForm {
     private final String defaultQuestionsNumber = "10";
@@ -84,7 +87,11 @@ public class LoadingForm {
                 QuizRepository createdQuiz = new QuizRepository(urlCreator.getURL());
                 Validator quizValidator = new QuizValidator(createdQuiz.takeData());
                 if (quizValidator.isValid()) {
-                    //toDo cange to file save
+                    //shows dialog if everything is ok
+                    boolean closeWindow = showDialog(createdQuiz);
+                    if(closeWindow){
+                        FormsManager.closeWindow(actionEvent);
+                    }
                 } else {
                     errorMessage = quizValidator.getErrorMessage();
                 }
@@ -92,14 +99,44 @@ public class LoadingForm {
                 errorMessage = requestValidator.getErrorMessage();
             }
             if(errorMessage != null) {
-                WindowManager.showAlertWithoutHeaderText("Quiz not created",errorMessage, Alert.AlertType.WARNING);
+                FormsManager.showAlertWithoutHeaderText("Quiz not created",errorMessage, Alert.AlertType.WARNING);
             }
         } catch (IOException e) {
-            WindowManager.showAlertWithoutHeaderText("Exception Occurred!",e.getMessage(), Alert.AlertType.ERROR);
+            FormsManager.showAlertWithoutHeaderText("Exception Occurred!",e.getMessage(), Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Shows dialog with possible options of the quiz
+     * @param quizRepo repo to take quiz from
+     * @return if the main window should be closed, if true it will be
+     */
+    private boolean showDialog(QuizRepository quizRepo) throws IOException {
+        boolean closeWindow = false;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Quiz successfully created");
+        alert.setHeaderText("Please, choose what to do with this quiz");
+        alert.setContentText("Choose your option.");
+
+        ButtonType saveQuiz = new ButtonType("Save Quiz");
+        ButtonType startQuiz = new ButtonType("Start Quiz");
+        ButtonType saveStartQuiz = new ButtonType("Save and Start Quiz");
+        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(saveQuiz, startQuiz, saveStartQuiz,cancel);
+        Optional<ButtonType> result = alert.showAndWait();
+
+
+        if (result.get() == saveQuiz){
+            System.out.println("Saved");
+        } else if (result.get() == startQuiz) {
+            FormsManager.openGameForm(quizRepo.takeData());
+            closeWindow = true;
+        } else if (result.get() == saveStartQuiz) {
+        }
+        return closeWindow;
+    }
     public void buttonClear(ActionEvent actionEvent) {
         reset();
     }

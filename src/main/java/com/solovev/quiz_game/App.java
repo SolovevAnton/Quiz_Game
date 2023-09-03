@@ -14,7 +14,7 @@ public class App extends Application {
         String loaderForm = "/com/solovev/quiz_game/UI/loadingForm.fxml";
         String gameForm = "/com/solovev/quiz_game/UI/gameForm.fxml";
 
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(mainForm));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(loaderForm));
 
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Hello!");

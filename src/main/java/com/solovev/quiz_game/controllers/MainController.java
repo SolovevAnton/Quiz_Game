@@ -2,6 +2,7 @@ package com.solovev.quiz_game.controllers;
 
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.util.FileChooseSingleton;
+import com.solovev.quiz_game.util.FormsManager;
 import com.solovev.quiz_game.util.WindowManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,8 +16,8 @@ public class MainController {
     public CheckBox checkBoxCorrectAnswers;
     @FXML
     public void buttonLoadFromInternet(ActionEvent actionEvent) throws IOException {
-        WindowManager.openWindow("/com/solovev/quiz_game/UI/loadingForm.fxml","Quiz Creator",null);
-        WindowManager.closeWindow(actionEvent);
+        FormsManager.openLoadForm();
+        FormsManager.closeWindow(actionEvent);
     }
     @FXML
     public void buttonLoadFromFile(ActionEvent actionEvent) throws IOException {
@@ -24,8 +25,8 @@ public class MainController {
         File openFile = chooseSingleton.showOpenDialog();
         if(openFile != null){
             QuizRepository repo = new QuizRepository(openFile,true);
-            WindowManager.openWindow("/com/solovev/quiz_game/UI/gameForm.fxml","Quiz Game",repo.takeData());
-            WindowManager.closeWindow(actionEvent);
+            FormsManager.openGameForm(repo.takeData());
+            FormsManager.closeWindow(actionEvent);
         }
     }
 }

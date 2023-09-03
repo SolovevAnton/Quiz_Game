@@ -8,6 +8,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Class used to create Tabs based on the question and store all answer related info
@@ -189,9 +191,15 @@ public class AnswerTab {
      */
     private Collection<RadioButton> radioButtonsAnswersFactory(Question question) {
         List<RadioButton> answersForVBox = new ArrayList<>();
-        question.getIncorrectAnswers().forEach(q -> answersForVBox.add(new RadioButton(q)));
-        correctAnswerRadioButton = new RadioButton(question.getCorrectAnswer());
-        answersForVBox.add(correctAnswerRadioButton);
+        //adds decorated radiobutton with this text to the answersForBox
+        Consumer<String> buttonFactory = s ->{
+            RadioButton rb = new RadioButton(s);
+            rb.setWrapText(true);
+            answersForVBox.add(rb);
+        };
+
+        question.getIncorrectAnswers().forEach(buttonFactory);
+        buttonFactory.accept(question.getCorrectAnswer());
 
         Font font;
         //sets different font and order in vbox for multiple and boolean questions
