@@ -15,6 +15,9 @@ import java.nio.file.Path;
 public class QuizRepository implements Repository<Quiz> {
     private final Quiz quiz;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    public QuizRepository(Quiz quiz){
+        this.quiz = quiz;
+    }
 
     /**
      * CSV or Json file to get quiz data
@@ -52,13 +55,13 @@ public class QuizRepository implements Repository<Quiz> {
      * @param path      to save data to
      * @param toEncrypt if true encrypts this quiz false otherwise
      */
-    public void save(Path path, boolean toEncrypt) throws IOException {
+    public void save(File path, boolean toEncrypt) throws IOException {
         if (toEncrypt) {
             encryptOrDecryptQuiz();
-            objectMapper.writeValue(path.toFile(), quiz);
+            objectMapper.writeValue(path, quiz);
             encryptOrDecryptQuiz(); // this is done to make original repo untouched
         } else {
-            objectMapper.writeValue(path.toFile(), quiz);
+            objectMapper.writeValue(path, quiz);
         }
     }
 

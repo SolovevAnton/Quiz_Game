@@ -77,7 +77,7 @@ public class TestQuizRepo {
         QuizRepository repoInitial = new QuizRepository(fileFullQuiz.toFile(),false);
         QuizRepository repo = new QuizRepository(fileFullQuiz.toFile(),false);
 
-        repo.save(fileFullQuizEncrypted,true);
+        repo.save(fileFullQuizEncrypted.toFile(),true);
 
         assertEquals(repoInitial.takeData(),repo.takeData());
 
@@ -115,7 +115,7 @@ public class TestQuizRepo {
     @Test
     public void saveAndReadTest() throws IOException {
         QuizRepository repoInitial = new QuizRepository(fileFullQuiz.toFile(),false);
-        repoInitial.save(fileFullQuizSaved,false);
+        repoInitial.save(fileFullQuizSaved.toFile(),false);
 
         QuizRepository repo = new QuizRepository(fileFullQuizSaved.toFile(),false);
 

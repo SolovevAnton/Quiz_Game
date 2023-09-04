@@ -1,18 +1,21 @@
 package com.solovev.quiz_game.controllers;
 
 import com.solovev.quiz_game.model.Category;
+import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.model.Request;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
 import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.util.FormsManager;
+import com.solovev.quiz_game.util.QuizFileChooserSaverAndLoader;
 import com.solovev.quiz_game.util.URLCreator;
 import com.solovev.quiz_game.util.WindowManager;
 import com.solovev.quiz_game.util.validators.QuizValidator;
 import com.solovev.quiz_game.util.validators.RequestValidator;
 import com.solovev.quiz_game.util.validators.Validator;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 
@@ -89,7 +92,7 @@ public class LoadingForm {
                 if (quizValidator.isValid()) {
                     //shows dialog if everything is ok
                     boolean closeWindow = showDialog(createdQuiz);
-                    if(closeWindow){
+                    if (closeWindow) {
                         FormsManager.closeWindow(actionEvent);
                     }
                 } else {
@@ -98,45 +101,64 @@ public class LoadingForm {
             } else {
                 errorMessage = requestValidator.getErrorMessage();
             }
-            if(errorMessage != null) {
-                FormsManager.showAlertWithoutHeaderText("Quiz not created",errorMessage, Alert.AlertType.WARNING);
+            if (errorMessage != null) {
+                FormsManager.showAlertWithoutHeaderText("Quiz not created", errorMessage, Alert.AlertType.WARNING);
             }
         } catch (IOException e) {
-            FormsManager.showAlertWithoutHeaderText("Exception Occurred!",e.getMessage(), Alert.AlertType.ERROR);
+            FormsManager.showAlertWithoutHeaderText("Exception Occurred!", e.getMessage(), Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         }
     }
 
     /**
      * Shows dialog with possible options of the quiz
+     *
      * @param quizRepo repo to take quiz from
      * @return if the main window should be closed, if true it will be
      */
     private boolean showDialog(QuizRepository quizRepo) throws IOException {
         boolean closeWindow = false;
+        Quiz savedQuiz = quizRepo.takeData();
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quiz successfully created");
         alert.setHeaderText("Please, choose what to do with this quiz");
         alert.setContentText("Choose your option.");
 
+
         ButtonType saveQuiz = new ButtonType("Save Quiz");
         ButtonType startQuiz = new ButtonType("Start Quiz");
         ButtonType saveStartQuiz = new ButtonType("Save and Start Quiz");
-        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType cancel = ButtonType.CANCEL;
 
-        alert.getButtonTypes().setAll(saveQuiz, startQuiz, saveStartQuiz,cancel);
+
+        alert.getButtonTypes().setAll(saveQuiz, startQuiz, saveStartQuiz, cancel);
         Optional<ButtonType> result = alert.showAndWait();
 
-
-        if (result.get() == saveQuiz){
-            System.out.println("Saved");
+        if (result.get() == saveQuiz) { //todo refactor DRY
+            //if file is not chosen dialog will not be closed
+            boolean closeDialog = QuizFileChooserSaverAndLoader.getInstance().saveQuiz(savedQuiz);
+            alert.setOnCloseRequest(event -> {
+                if (!closeDialog) {
+                    event.consume();
+                }
+            });
         } else if (result.get() == startQuiz) {
-            FormsManager.openGameForm(quizRepo.takeData());
+            FormsManager.openGameForm(savedQuiz);
             closeWindow = true;
         } else if (result.get() == saveStartQuiz) {
+            //if file is not chosen dialog will not be closed
+            boolean closeDialog = QuizFileChooserSaverAndLoader.getInstance().saveQuiz(savedQuiz);
+            if (closeDialog) {
+                FormsManager.openGameForm(savedQuiz);
+                closeWindow = true;
+            } else {
+                alert.setOnCloseRequest(Event::consume);
+            }
         }
         return closeWindow;
     }
+
     public void buttonClear(ActionEvent actionEvent) {
         reset();
     }
