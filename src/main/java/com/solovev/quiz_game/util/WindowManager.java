@@ -2,6 +2,7 @@ package com.solovev.quiz_game.util;
 
 import com.solovev.quiz_game.App;
 import com.solovev.quiz_game.controllers.ControllerData;
+import com.solovev.quiz_game.controllers.ControllerRetrieveData;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -23,7 +24,7 @@ public class WindowManager {
      * @param name  of the stage .fxml file
      * @param title of the stage
      * @param data  to pass to the stage, or null if nothing
-     * @return created stage
+     * @return created stage with user data of loader
      * @throws IOException in case IOEException occurs
      */
     public static <T> Stage getStage(String name, String title, T data) throws IOException {
@@ -39,6 +40,7 @@ public class WindowManager {
             ControllerData<T> controller = loader.getController();
             controller.initData(data);
         }
+        stage.setUserData(loader);
         return stage;
     }
 
@@ -71,6 +73,11 @@ public class WindowManager {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
         return stage;
+    }
+    public static <T,U> U openWindowAndWaitWithRetrieveData(String name, String title, T data) throws IOException {
+        FXMLLoader loader = (FXMLLoader) openWindowAndWait(name,title,data).getUserData();
+        ControllerRetrieveData<U> controllerWithData = loader.getController();
+        return controllerWithData.retrieveData();
     }
 
     /**

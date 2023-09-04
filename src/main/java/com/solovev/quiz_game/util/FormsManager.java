@@ -9,9 +9,13 @@ import java.io.IOException;
  */
 public class FormsManager extends WindowManager {
     public static void openGameForm(Quiz quiz) throws IOException {
-        WindowManager.openWindow("/com/solovev/quiz_game/UI/gameForm.fxml","Quiz Game",quiz);
+        openWindow("/com/solovev/quiz_game/UI/gameForm.fxml","Quiz Game",quiz);
     }
     public static void openLoadForm() throws IOException {
-        WindowManager.openWindow("/com/solovev/quiz_game/UI/loadingForm.fxml","Quiz Creator",null);
+        openWindow("/com/solovev/quiz_game/UI/loadingForm.fxml","Quiz Creator",null);
     }
+    public static Boolean openDialogForm(Quiz quiz) throws IOException {
+        return openWindowAndWaitWithRetrieveData("/com/solovev/quiz_game/UI/dialogForm.fxml","Quiz successfully created",quiz);
+    }
+
 }

@@ -117,46 +117,8 @@ public class LoadingForm {
      * @return if the main window should be closed, if true it will be
      */
     private boolean showDialog(QuizRepository quizRepo) throws IOException {
-        boolean closeWindow = false;
-        Quiz savedQuiz = quizRepo.takeData();
+        return FormsManager.openDialogForm(quizRepo.takeData());
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Quiz successfully created");
-        alert.setHeaderText("Please, choose what to do with this quiz");
-        alert.setContentText("Choose your option.");
-
-
-        ButtonType saveQuiz = new ButtonType("Save Quiz");
-        ButtonType startQuiz = new ButtonType("Start Quiz");
-        ButtonType saveStartQuiz = new ButtonType("Save and Start Quiz");
-        ButtonType cancel = ButtonType.CANCEL;
-
-
-        alert.getButtonTypes().setAll(saveQuiz, startQuiz, saveStartQuiz, cancel);
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.get() == saveQuiz) { //todo refactor DRY
-            //if file is not chosen dialog will not be closed
-            boolean closeDialog = QuizFileChooserSaverAndLoader.getInstance().saveQuiz(savedQuiz);
-            alert.setOnCloseRequest(event -> {
-                if (!closeDialog) {
-                    event.consume();
-                }
-            });
-        } else if (result.get() == startQuiz) {
-            FormsManager.openGameForm(savedQuiz);
-            closeWindow = true;
-        } else if (result.get() == saveStartQuiz) {
-            //if file is not chosen dialog will not be closed
-            boolean closeDialog = QuizFileChooserSaverAndLoader.getInstance().saveQuiz(savedQuiz);
-            if (closeDialog) {
-                FormsManager.openGameForm(savedQuiz);
-                closeWindow = true;
-            } else {
-                alert.setOnCloseRequest(Event::consume);
-            }
-        }
-        return closeWindow;
     }
 
     public void buttonClear(ActionEvent actionEvent) {
