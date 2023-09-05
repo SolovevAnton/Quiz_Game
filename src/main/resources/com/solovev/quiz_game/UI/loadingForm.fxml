@@ -14,7 +14,7 @@
         </Label>
         <Label layoutX="13.0" layoutY="36.0" prefHeight="36.0" prefWidth="275.0" text="Number of Questions from 1 to 50:" />
         <TextField fx:id="textFieldNumberOfQuestions" alignment="TOP_LEFT" layoutX="13.0" layoutY="72.0" prefHeight="36.0" prefWidth="275.0" />
-        <Hyperlink accessibleText="https://opentdb.com" layoutX="21.0" layoutY="375.0" prefWidth="258.0" text="https://opentdb.com" underline="true" visited="true">
+        <Hyperlink accessibleText="https://opentdb.com" layoutX="21.0" layoutY="379.0" onAction="#openLink" prefWidth="258.0" text="https://opentdb.com" underline="true" visited="true">
             <graphic>
                 <Label text="Quiz is generated thaks to: ">
                     <font>
@@ -32,13 +32,9 @@
         <ComboBox fx:id="comboBoxDifficulty" layoutX="13.0" layoutY="216.0" prefHeight="36.0" prefWidth="275.0" promptText="Any Difficulty" />
         <Label layoutX="13.0" layoutY="252.0" prefHeight="36.0" prefWidth="181.0" text="Select Type:" />
         <ComboBox fx:id="comboBoxType" layoutX="13.0" layoutY="288.0" prefHeight="36.0" prefWidth="275.0" promptText="Any Type" />
-        <Button layoutX="13.0" layoutY="333.0" mnemonicParsing="false" onAction="#buttonGenerateQuiz" prefHeight="43.0" prefWidth="275.0" text="Generate Quiz!">
-            <styleClass>
-                <String fx:value="accent" />
-                <String fx:value="rounded" />
-            </styleClass>
+        <Button layoutX="163.0" layoutY="337.0" mnemonicParsing="false" onAction="#buttonGenerateQuiz" prefHeight="36.0" prefWidth="125.0" styleClass="accent" text="Generate Quiz!">
             <font>
-                <Font name="System Bold" size="18.0" />
+                <Font name="System Bold" size="14.0" />
             </font>
         </Button>
         <Button layoutX="240.0" layoutY="40.0" mnemonicParsing="false" onAction="#buttonClear" prefHeight="23.0" prefWidth="48.0" text="Clear">
@@ -48,6 +44,11 @@
             <String fx:value="small" />
             </styleClass>
         </Button>
+      <Button layoutX="13.0" layoutY="337.0" mnemonicParsing="false" onAction="#buttonToMainForm" prefHeight="36.0" prefWidth="125.0" text="&lt; Back">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
 
     </children>
 </AnchorPane>

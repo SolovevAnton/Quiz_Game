@@ -1,28 +1,27 @@
 package com.solovev.quiz_game.controllers;
 
 import com.solovev.quiz_game.model.Category;
-import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.model.Request;
 import com.solovev.quiz_game.model.enums.Difficulty;
 import com.solovev.quiz_game.model.enums.QuestionType;
 import com.solovev.quiz_game.repositories.AvailableCategoriesRepository;
 import com.solovev.quiz_game.repositories.QuizRepository;
 import com.solovev.quiz_game.util.FormsManager;
-import com.solovev.quiz_game.util.QuizFileChooserSaverAndLoader;
 import com.solovev.quiz_game.util.URLCreator;
-import com.solovev.quiz_game.util.WindowManager;
 import com.solovev.quiz_game.util.validators.QuizValidator;
 import com.solovev.quiz_game.util.validators.RequestValidator;
 import com.solovev.quiz_game.util.validators.Validator;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import java.awt.Desktop;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Optional;
 
 public class LoadingForm {
     private final String defaultQuestionsNumber = "10";
@@ -105,7 +104,7 @@ public class LoadingForm {
                 FormsManager.showAlertWithoutHeaderText("Quiz not created", errorMessage, Alert.AlertType.WARNING);
             }
         } catch (IOException e) {
-            FormsManager.showAlertWithoutHeaderText("Exception Occurred!", e.getMessage(), Alert.AlertType.ERROR);
+            FormsManager.showAlertWithoutHeaderText("Exception Occurred!", e.toString(), Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         }
     }
@@ -131,5 +130,14 @@ public class LoadingForm {
 
     public int getMaxQuestionsNumber() {
         return maxQuestionsNumber;
+    }
+    @FXML
+    public void openLink(ActionEvent actionEvent) throws URISyntaxException, IOException {
+        Desktop.getDesktop().browse(new URI("https://opentdb.com"));
+    }
+    @FXML
+    public void buttonToMainForm(ActionEvent actionEvent) throws IOException {
+        FormsManager.openMainForm();
+        FormsManager.closeWindow(actionEvent);
     }
 }
