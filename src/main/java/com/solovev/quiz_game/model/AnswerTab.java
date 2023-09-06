@@ -33,7 +33,7 @@ public class AnswerTab {
         ANSWERED("-fx-background-color: #9bfaf5"),
         CORRECT("-fx-background-color: #93e9be"),
         INCORRECT("-fx-background-color: #fc7777");
-        private String style;
+        private final String style;
 
         Styles(String style) {
             this.style = style;
@@ -192,14 +192,15 @@ public class AnswerTab {
     private Collection<RadioButton> radioButtonsAnswersFactory(Question question) {
         List<RadioButton> answersForVBox = new ArrayList<>();
         //adds decorated radiobutton with this text to the answersForBox
-        Consumer<String> buttonFactory = s ->{
+        Function<String,RadioButton> buttonFactory = s ->{
             RadioButton rb = new RadioButton(s);
             rb.setWrapText(true);
             answersForVBox.add(rb);
+            return rb;
         };
 
-        question.getIncorrectAnswers().forEach(buttonFactory);
-        buttonFactory.accept(question.getCorrectAnswer());
+        question.getIncorrectAnswers().forEach(buttonFactory::apply);
+        correctAnswerRadioButton = buttonFactory.apply(question.getCorrectAnswer());
 
         Font font;
         //sets different font and order in vbox for multiple and boolean questions

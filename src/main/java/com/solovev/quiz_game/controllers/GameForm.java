@@ -3,9 +3,9 @@ package com.solovev.quiz_game.controllers;
 import com.solovev.quiz_game.model.AnswerTab;
 import com.solovev.quiz_game.model.Question;
 import com.solovev.quiz_game.model.Quiz;
-import com.solovev.quiz_game.repositories.QuizRepository;
-import com.solovev.quiz_game.repositories.Repository;
 import com.solovev.quiz_game.util.ButtonFactory;
+import com.solovev.quiz_game.util.FormsManager;
+import com.solovev.quiz_game.util.QuizFileChooserSaverAndLoader;
 import com.solovev.quiz_game.util.WindowManager;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -15,7 +15,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,23 +36,24 @@ public class GameForm implements ControllerData<Quiz> {
     public TableColumn<AnswerTab, String> questionColumn;
     @FXML
     public TableColumn<AnswerTab, Integer> numberColumn;
-    private TableColumn<AnswerTab, String> answersColumn = new TableColumn<>("Answers");
+    private final TableColumn<AnswerTab, String> answersColumn = new TableColumn<>("Answers");
 
     private final List<AnswerTab> answerTabs = new ArrayList<>();
+    private Quiz quiz;
 
 
     /**
      * to initialize everything related to the Tabs
      */
-    private void initializeTabs(Quiz quiz) {
+    private void initializeTabs() {
         int questionCounter = 1;
         ButtonFactory factory = new ButtonFactory(tabPainMain);
         List<Tab> tabs = tabPainMain.getTabs();
+
         for (Question q : quiz.getQuestions()) {
             int questionNumber = questionCounter++;
             AnswerTab answerTab = new AnswerTab(q, questionNumber);
             answerTabs.add(answerTab);
-
             //checks and defines behaviour if its first or last tab
             Tab tabToAdd = questionNumber == 1
                     ? answerTab.createTab(factory.nextButton(), false)
@@ -67,6 +67,9 @@ public class GameForm implements ControllerData<Quiz> {
         tabs.add(tabs.remove(0));
     }
 
+    /**
+     * Initializing table columns NOT CONTENT
+     */
     private void initializeAnswersTable() {
         //set number column
         numberColumn.setCellValueFactory(new PropertyValueFactory<>("questionNumber"));
@@ -105,10 +108,9 @@ public class GameForm implements ControllerData<Quiz> {
 
     public void checkResults(ActionEvent actionEvent) {
         if (
-                answerTabs.stream().filter(AnswerTab::isAnswered).count() < answerTabs.size() //checks if not all are answered
+                answerTabs.stream().filter(AnswerTab::isAnswered).count() == answerTabs.size() //checks if all are answered
         ) {
-            WindowManager.showAlertWithoutHeaderText("Cannot proceed", "Please select answer for every question", Alert.AlertType.WARNING);
-        } else {
+
             answersTable.setItems(FXCollections.observableList(answerTabs));
             answersTable.refresh();
             //setAnswers
@@ -121,12 +123,15 @@ public class GameForm implements ControllerData<Quiz> {
 
             //checks all actions for the tabs
             answerTabs.forEach(a -> a.check(boxCorrectAnswers.isSelected()));
+        } else {
+            WindowManager.showAlertWithoutHeaderText("Cannot proceed", "Please select answer for every question", Alert.AlertType.WARNING);
         }
     }
 
     @Override
     public void initData(Quiz quiz) {
-        initializeTabs(quiz);
+        this.quiz = quiz;
+        initializeTabs();
 
         //initialize label
         labelCorrectAnswers.setText(labelCorrectAnswers.getText().replace("XX", String.valueOf(quiz.size())));
@@ -134,5 +139,35 @@ public class GameForm implements ControllerData<Quiz> {
         initializeAnswersTable();
     }
 
+    @FXML
+    public void buttonToMainMenu(ActionEvent actionEvent) throws IOException {
+        FormsManager.openMainForm();
+        FormsManager.closeWindow(actionEvent);
+    }
 
+    @FXML
+    public void buttonSaveQuiz(ActionEvent actionEvent) throws IOException {
+        QuizFileChooserSaverAndLoader.getInstance().saveQuiz(quiz);
+    }
+
+    @FXML
+    public void buttonRestartQuiz(ActionEvent actionEvent) {
+        //clear table and answer tabs
+        answerTabs.clear();
+        answersTable.setItems(FXCollections.observableList(new ArrayList<>()) );
+
+        //refresh tabs
+        List<Tab> tabs = tabPainMain.getTabs();
+        Tab resultTab = tabs.remove(tabs.size() - 1); //taking result tab
+        tabs.clear();
+        tabs.add(resultTab);
+
+        initializeTabs();
+
+
+        //labels
+        labelCorrectAnswers.setText(labelCorrectAnswers.getText().replaceAll(".*/", "??/"));
+        labelCorrectPercent.setText(labelCorrectPercent.getText().replaceAll(".+%", "???%"));
+
+    }
 }
