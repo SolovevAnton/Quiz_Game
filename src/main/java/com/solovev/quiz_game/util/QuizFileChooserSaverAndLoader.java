@@ -40,7 +40,7 @@ public class QuizFileChooserSaverAndLoader {
     public boolean saveQuiz(Quiz quiz) throws IOException {
         File chosenFile = chooser.showSaveDialog(null);
         if(chosenFile != null){
-            chooser.setInitialDirectory(chosenFile);
+            setDirectory(chosenFile);
             QuizRepository repo = new QuizRepository(quiz);
             repo.save(chosenFile,true);
         }
@@ -55,11 +55,14 @@ public class QuizFileChooserSaverAndLoader {
         Quiz result = null;
         File chosenFile = chooser.showOpenDialog(null);
         if(chosenFile != null){
-            chooser.setInitialDirectory(chosenFile.getParentFile());
+            setDirectory(chosenFile);
             result = new QuizRepository(chosenFile,true).takeData();
         }
         return result;
     }
+    private void setDirectory(File chosenFile){
+        chooser.setInitialDirectory(chosenFile.getParentFile());
+            }
 
 
 }
