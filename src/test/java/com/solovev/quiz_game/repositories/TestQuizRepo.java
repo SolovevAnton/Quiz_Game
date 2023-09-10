@@ -100,7 +100,7 @@ public class TestQuizRepo {
         assertEquals(repoInitial.takeData(),repo.takeData());
     }
     @Test
-    public void readFromHTMLFile() throws IOException { //todo understand why it works like this! see get auestions in quiz not work without hash set
+    public void readFromHTMLFile() throws IOException {
         QuizRepository repoInitial = new QuizRepository(fileHTML.toFile(),false);
         QuizRepository repo = new QuizRepository(fileHTML.toFile(),false);
 

@@ -1,13 +1,15 @@
 package com.solovev.quiz_game.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.util.URLDataGetter;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 
 /**
  * repository to get single quiz from file
@@ -15,7 +17,9 @@ import java.nio.file.Path;
 public class QuizRepository implements Repository<Quiz> {
     private final Quiz quiz;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    public QuizRepository(Quiz quiz){
+    private final ObjectMapper csvMapper = new CsvMapper();
+
+    public QuizRepository(Quiz quiz) {
         this.quiz = quiz;
     }
 
@@ -26,7 +30,8 @@ public class QuizRepository implements Repository<Quiz> {
      * @param isEncrypted shows if the source is encrypted or not, if true uses decryption
      */
     public QuizRepository(File file, boolean isEncrypted) throws IOException {
-        this.quiz = objectMapper.
+        ObjectMapper mapper = isCVSFile(file) ? csvMapper : objectMapper;
+        this.quiz = mapper.
                 readValue(file, Quiz.class);
 
         if (isEncrypted) {
@@ -52,16 +57,19 @@ public class QuizRepository implements Repository<Quiz> {
     /**
      * Saves this repo data to the file
      *
-     * @param path      to save data to
+     * @param file      to save data to
      * @param toEncrypt if true encrypts this quiz false otherwise
      */
-    public void save(File path, boolean toEncrypt) throws IOException {
+    public void save(File file, boolean toEncrypt) throws IOException {
+        ObjectWriter mapper = isCVSFile(file)
+                ? csvMapper.writerFor(Quiz.class).with(new CsvMapper().schemaFor(Quiz.class))
+                : objectMapper.writer();
         if (toEncrypt) {
             encryptOrDecryptQuiz();
-            objectMapper.writeValue(path, quiz);
+            mapper.writeValue(file, quiz);
             encryptOrDecryptQuiz(); // this is done to make original repo untouched
         } else {
-            objectMapper.writeValue(path, quiz);
+            mapper.writeValue(file, quiz);
         }
     }
 
@@ -70,6 +78,15 @@ public class QuizRepository implements Repository<Quiz> {
      */
     private void encryptOrDecryptQuiz() {
         quiz.encryptOrDecrypt();
+    }
+
+    /**
+     * Check if file is CSV
+     *
+     * @return true if CVS false otherwise
+     */
+    private boolean isCVSFile(File file) {
+        return file.getName().matches(".*\\.csv");
     }
 
     @Override

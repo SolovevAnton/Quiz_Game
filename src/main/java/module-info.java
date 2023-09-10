@@ -5,6 +5,7 @@ module com.solovev.quiz_game {
     requires org.kordamp.bootstrapfx.core;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.dataformat.csv;
     requires org.apache.commons.text;
     requires java.desktop;
 

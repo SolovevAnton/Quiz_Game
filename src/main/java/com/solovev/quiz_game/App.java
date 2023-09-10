@@ -1,5 +1,6 @@
 package com.solovev.quiz_game;
 
+import com.solovev.quiz_game.util.FormsManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,16 +11,8 @@ import java.io.IOException;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        String mainForm = "/com/solovev/quiz_game/UI/main.fxml";
-        String loaderForm = "/com/solovev/quiz_game/UI/loadingForm.fxml";
-        String gameForm = "/com/solovev/quiz_game/UI/gameForm.fxml";
-
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(loaderForm));
-
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+        //todo s: 1. cvs? 2.all exceptions in alerts 3.add functionality with tick 3..rescaling?
+        FormsManager.openMainForm();
     }
 
     public static void main(String[] args) {
