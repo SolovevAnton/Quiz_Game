@@ -1,11 +1,14 @@
 package com.solovev.quiz_game.util;
 
+import com.solovev.quiz_game.App;
 import com.solovev.quiz_game.model.Quiz;
 import com.solovev.quiz_game.repositories.QuizRepository;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 /**
  * Class to make sure the last selected dir will always be the same;
@@ -15,17 +18,23 @@ import java.io.IOException;
 public class QuizFileChooserSaverAndLoader {
     private static QuizFileChooserSaverAndLoader instance;
     private static final FileChooser chooser = new FileChooser();
-    private QuizFileChooserSaverAndLoader(){
-        File root = new File(System.getProperty("user.dir"));
+    private static final Preferences preferences = Preferences.userNodeForPackage(App.class);
+
+    private QuizFileChooserSaverAndLoader() {
+        //first creation directory set
+        File root = preferences.get("Last put", null) == null
+                ? new File(System.getProperty("user.dir"))
+                : new File(preferences.get("Last put", null));
+
         chooser.setInitialDirectory(root);
         chooser
                 .getExtensionFilters()
-                .setAll(new FileChooser.ExtensionFilter("JSON", "*.json"),
-                        new FileChooser.ExtensionFilter("CSV", "*.csv")
+                .setAll(new FileChooser.ExtensionFilter("JSON", "*.json")
                 );
     }
-    public static synchronized QuizFileChooserSaverAndLoader getInstance(){
-        if(instance == null){
+
+    public static synchronized QuizFileChooserSaverAndLoader getInstance() {
+        if (instance == null) {
             instance = new QuizFileChooserSaverAndLoader();
         }
         return instance;
@@ -33,36 +42,49 @@ public class QuizFileChooserSaverAndLoader {
 
     /**
      * Saves quiz based on chosen filePath
+     *
      * @param quiz to save
      * @return true if quiz was saved, false otherwise
-     * @throws IOException is IO exception occurs
      */
-    public boolean saveQuiz(Quiz quiz) throws IOException {
+    public boolean saveQuiz(Quiz quiz) {
         File chosenFile = chooser.showSaveDialog(null);
-        if(chosenFile != null){
-            setDirectory(chosenFile);
-            QuizRepository repo = new QuizRepository(quiz);
-            repo.save(chosenFile,true);
+        try {
+            if (chosenFile != null) {
+                setDirectory(chosenFile);
+                QuizRepository repo = new QuizRepository(quiz);
+                repo.save(chosenFile, true);
+            }
+        } catch (IOException e) {
+            FormsManager.showAlertWithoutHeaderText("IOException Occurred!", e.toString(), Alert.AlertType.ERROR);
+            throw new RuntimeException(e);
         }
         return chosenFile != null;
     }
+
     /**
      * Opens quiz based on chosen filePath
+     *
      * @return opened quiz or null if file was not chosen
-     * @throws IOException is IO exception occurs
      */
-    public Quiz openQuiz() throws IOException {
+    public Quiz openQuiz() {
         Quiz result = null;
-        File chosenFile = chooser.showOpenDialog(null);
-        if(chosenFile != null){
-            setDirectory(chosenFile);
-            result = new QuizRepository(chosenFile,true).takeData();
+        try {
+            File chosenFile = chooser.showOpenDialog(null);
+            if (chosenFile != null) {
+                setDirectory(chosenFile);
+                result = new QuizRepository(chosenFile, true).takeData();
+            }
+        } catch (IOException e) {
+            FormsManager.showAlertWithoutHeaderText("IOException Occurred!", e.toString(), Alert.AlertType.ERROR);
+            throw new RuntimeException(e);
         }
         return result;
     }
-    private void setDirectory(File chosenFile){
-        chooser.setInitialDirectory(chosenFile.getParentFile());
-            }
 
+    private void setDirectory(File chosenFile) {
+        File directoryToState = chosenFile.getParentFile();
+        chooser.setInitialDirectory(directoryToState);
+        preferences.put("Last put", directoryToState.toString());
+    }
 
 }

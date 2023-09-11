@@ -13,10 +13,11 @@ import com.solovev.quiz_game.util.validators.RequestValidator;
 import com.solovev.quiz_game.util.validators.Validator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import java.awt.Desktop;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,13 +31,12 @@ public class LoadingForm {
     public ComboBox<Difficulty> comboBoxDifficulty;
     public ComboBox<Category> comboBoxCategory;
     public TextField textFieldNumberOfQuestions;
-    private Collection<Category> availableCategories;
 
     public void initialize() throws IOException {
 
         comboBoxType.getItems().setAll(QuestionType.values());
         comboBoxDifficulty.getItems().setAll(Difficulty.values());
-        this.availableCategories = new AvailableCategoriesRepository().takeData();
+        Collection<Category> availableCategories = new AvailableCategoriesRepository().takeData();
         comboBoxCategory.getItems().setAll(availableCategories);
         //sort sorted in alphabetical order
         comboBoxCategory.getItems().sort(Comparator.comparing(Category::getName));
@@ -75,7 +75,7 @@ public class LoadingForm {
         comboBoxType.setValue(null);
         comboBoxCategory.setValue(null);
         comboBoxDifficulty.setValue(null);
-        textFieldNumberOfQuestions.setText(String.valueOf(defaultQuestionsNumber));
+        textFieldNumberOfQuestions.setText(defaultQuestionsNumber);
     }
 
     public void buttonGenerateQuiz(ActionEvent actionEvent) {
@@ -131,12 +131,14 @@ public class LoadingForm {
     public int getMaxQuestionsNumber() {
         return maxQuestionsNumber;
     }
+
     @FXML
     public void openLink(ActionEvent actionEvent) throws URISyntaxException, IOException {
         Desktop.getDesktop().browse(new URI("https://opentdb.com"));
     }
+
     @FXML
-    public void buttonToMainForm(ActionEvent actionEvent) throws IOException {
+    public void buttonToMainForm(ActionEvent actionEvent) {
         FormsManager.openMainForm();
         FormsManager.closeWindow(actionEvent);
     }

@@ -8,7 +8,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -119,7 +118,8 @@ public class AnswerTab {
      * Assigns position to the left button based on the original text borders
      */
     private void positionLeftButton(Button leftButton) {
-        AnchorPane.setLeftAnchor(leftButton, (mainPane.getPrefWidth() - questionText.getMaxWidth()) / 2); //sets at the beginning og the text
+        //sets at the beginning of the text
+        AnchorPane.setLeftAnchor(leftButton, (mainPane.getPrefWidth() - questionText.getMaxWidth()) / 2);
         positionButtonHeight(leftButton);
     }
 
@@ -128,7 +128,8 @@ public class AnswerTab {
      */
     private void positionRightButton(Button rightButton) {
         rightButton.widthProperty().addListener(w -> {
-            AnchorPane.setLeftAnchor(rightButton, ((mainPane.getPrefWidth() + questionText.getMaxWidth()) / 2) - rightButton.getWidth()); //sets at the end of the text
+            //sets at the end of the text
+            AnchorPane.setLeftAnchor(rightButton, ((mainPane.getPrefWidth() + questionText.getMaxWidth()) / 2) - rightButton.getWidth());
         });
 
         positionButtonHeight(rightButton);
@@ -208,7 +209,7 @@ public class AnswerTab {
             Collections.shuffle(answersForVBox);
             font = Font.font(15);
         } else {
-            answersForVBox.sort(Comparator.comparing(RadioButton::getText).reversed()); //todo why lambda not working?
+            answersForVBox.sort(Comparator.comparing(RadioButton::getText).reversed());
             font = Font.font(17);
         }
 
