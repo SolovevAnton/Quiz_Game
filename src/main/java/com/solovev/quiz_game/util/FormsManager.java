@@ -25,7 +25,7 @@ public class FormsManager extends WindowManager {
         ioExceptionHandler(() -> openWindow("/com/solovev/quiz_game/UI/loadingForm.fxml", "Quiz Creator", null));
     }
 
-    public static Boolean openDialogForm(Quiz quiz){
+    public static Boolean openDialogForm(Quiz quiz) {
         boolean success;
         try {
             success = openWindowAndWaitWithRetrieveData("/com/solovev/quiz_game/UI/dialogForm.fxml", "Quiz successfully created", quiz);
@@ -33,7 +33,7 @@ public class FormsManager extends WindowManager {
             FormsManager.showAlertWithoutHeaderText("IOException Occurred!", e.toString(), Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         }
-            return success;
+        return success;
     }
 
     /**
