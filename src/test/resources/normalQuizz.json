@@ -1,0 +1,87 @@
+{
+  "response_code": 0,
+  "results": [
+    {
+      "category": "Entertainment: Video Games",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "When Halo 3: ODST was unveiled in 2008, it had a different title. What was the game formally called?",
+      "correct_answer": "Halo 3: Recon",
+      "incorrect_answers": [
+        "Halo 3: Helljumpers",
+        "Halo 3: Phantom",
+        "Halo 3: Guerilla"
+      ]
+    },
+    {
+      "category": "Entertainment: Music",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What was the title of Sakamoto Kyu song o Muite Arukou (I Look Up As I Walk) changed to in the United States?",
+      "correct_answer": "Sukiyaki",
+      "incorrect_answers": [
+        "Takoyaki",
+        "Sushi",
+        "Oden"
+      ]
+    },
+    {
+      "category": "Entertainment: Video Games",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "In the original DOOM (1993) which of the following is NOT a cheat code?",
+      "correct_answer": "IDCLIP",
+      "incorrect_answers": [
+        "IDFA",
+        "IDDQD",
+        "IDSPISPOPD"
+      ]
+    },
+    {
+      "category": "Entertainment: Film",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the name of the fictional retro-mod band starring Austin Powers as the lead vocalist?",
+      "correct_answer": "Ming Tea",
+      "incorrect_answers": [
+        "Cough Fi",
+        "Spear Mint",
+        "Mister E"
+      ]
+    },
+    {
+      "category": "Entertainment: Music",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Which music publication is often abbreviated to NME?",
+      "correct_answer": "New Musical Express",
+      "incorrect_answers": [
+        "New Metro Entertainment",
+        "Next Musical Enterprise",
+        "North Manchester Express"
+      ]
+    },
+    {
+      "category": "Entertainment: Music",
+      "type": "boolean",
+      "difficulty": "easy",
+      "question": "Lead Singer Rivers Cuomo of American rock band Weezer attended Harvard.",
+      "correct_answer": "True",
+      "incorrect_answers": [
+        "False"
+      ]
+    },
+    {
+      "category": "Entertainment: Books",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "In The Lies of Locke Lamora, what title is Locke known by in the criminal world?",
+      "correct_answer": "The Thorn of Camorr",
+      "incorrect_answers": [
+        "The Rose of the Marrows",
+        "The Thorn of Emberlain",
+        "The Thorn of the Marrows"
+      ]
+    }
+  ]
+}

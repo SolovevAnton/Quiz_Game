@@ -1,0 +1,9 @@
+{
+  "category_id": 9,
+  "category_question_count": {
+    "total_question_count": 305,
+    "total_easy_question_count": 122,
+    "total_medium_question_count": 123,
+    "total_hard_question_count": 60
+  }
+}
